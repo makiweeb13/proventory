@@ -16,14 +16,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<ProtectedRoutes />} >
+        <Route path="/" element={<ProtectedRoutes />} >
           <Route element={<PageLayout />} >
             <Route index element={<Dashboard />} />
             <Route path="/products" element={<Products />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/users" element={<Users />} />
             <Route path="/sales" element={<Sales />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<Profile />} />
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />

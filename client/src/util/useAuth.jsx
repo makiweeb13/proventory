@@ -6,7 +6,7 @@ const useAuth = () => {
 
     useEffect(() => {
         
-       setIsAuthenticated(true);
+       setIsAuthenticated(false);
        setLoading(false);
 
         // Simulate an API call to check authentication status
