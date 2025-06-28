@@ -65,7 +65,6 @@ function Login() {
                 { errors.email && touched.email && <p className='error-message'>{errors.email}</p> }
                 { errors.password && touched.password && <p className='error-message'>{errors.password}</p> }
                 <button type="submit">Login</button>
-                <p>Don&#39;t have an account yet? <Link to="/register" className="link">Create Account</Link></p>
             </form>
         </div>
     )

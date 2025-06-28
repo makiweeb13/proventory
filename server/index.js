@@ -17,5 +17,18 @@ app.use(express.json());
 app.use(cookieParser());
 dotenv.config();
 
+// Import routes
+const routes = require('./routes');
+
+// Routes
+app.use('/user', routes.userRoutes)
+
 // Error handling middleware
 app.use(errorHandler);
+
+const PORT = process.env.PORT;
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
