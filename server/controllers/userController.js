@@ -51,13 +51,35 @@ const loginController = async (req, res, next) => {
     }
 }
 
-const getUser = async (req, res) => {
+const getCurrentUser = async (req, res) => {
     const { id, name, email, role } = req.user
     res.json({ id, name, email, role })
 }
 
+const getUserController = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const user = await userService.getUserById(id);
+        if (!user) {
+            return ThrowError(res, 404, 'User not found');
+        }
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+}
+
+const logoutController = (req, res) => {
+  // Clear the JWT cookie
+  res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'strict' });
+ 
+  res.status(200).json({ message: 'Logged out successfully' });
+}
+    
 module.exports = {
     registerController,
     loginController,
-    getUser
+    getCurrentUser,
+    getUserController,
+    logoutController
 }
