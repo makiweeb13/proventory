@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  user_id  Int         @id @default(autoincrement())
+  name     String?     @db.VarChar(255)
+  email    String?     @db.VarChar(255)
+  password String?     @db.VarChar(255)
+  role     users_role?
+  sales    sales[]
+}
+
+model categories {
+  category_id Int        @id @default(autoincrement())
+  name        String?    @db.VarChar(255)
+  products    products[]
+}
+
+model products {
+  product_id    Int         @id @default(autoincrement())
+  name          String?     @db.VarChar(255)
+  stock         Int?
+  buying_price  Decimal?    @db.Decimal(10, 2)
+  selling_price Decimal?    @db.Decimal(10, 2)
+  date_added    DateTime?   @db.Date
+  category_id   Int?
+  categories    categories? @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "products_ibfk_1")
+  sales         sales[]
+
+  @@index([category_id], map: "category_id")
+}
+
+model sales {
+  sales_id   Int       @id @default(autoincrement())
+  product_id Int?
+  user_id    Int?
+  amount     Decimal?  @db.Decimal(10, 2)
+  sale_date  DateTime? @db.Date
+  products   products? @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "sales_ibfk_1")
+  users      users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "sales_ibfk_2")
+
+  @@index([product_id], map: "product_id")
+  @@index([user_id], map: "user_id")
+}
+
+enum users_role {
+  user
+  admin
+}

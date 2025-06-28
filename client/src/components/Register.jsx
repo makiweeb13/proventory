@@ -6,7 +6,8 @@ function Register() {
     const navigate = useNavigate();
 
     const onSubmit = (values, { setSubmitting, resetForm }) => {
-        fetch('http://localhost:5000/users/register', {
+        const API_URL = import.meta.env.VITE_API_URL;
+        fetch(`${API_URL}/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values)
@@ -19,7 +20,7 @@ function Register() {
             navigate('/login')
         })
         .catch(err => {
-            console.error(err);
+            console.error(err)
         })
     }
 
