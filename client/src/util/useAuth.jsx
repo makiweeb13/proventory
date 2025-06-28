@@ -1,29 +1,49 @@
 import { useState, useEffect } from 'react';
+import useStore from '../store/store';
 
 const useAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
+    const { setUser } = useStore();
 
     useEffect(() => {
-        
-       setIsAuthenticated(false);
-       setLoading(false);
+        const checkAuth = async () => {
+            const API_URL = import.meta.env.VITE_API_URL;
+            try {
+                const response = await fetch(`${API_URL}/user/me`, { credentials: 'include' });
+                if (!response.ok) {
+                    setIsAuthenticated(false);
+                    setUser(null);
+                    setLoading(false);
+                    return;
+                }
+                const data = await response.json();
+                if (
+                    data &&
+                    typeof data.id !== 'undefined' &&
+                    typeof data.name === 'string' &&
+                    typeof data.email === 'string' &&
+                    typeof data.role === 'string'
+                ) {
+                    setIsAuthenticated(true);
+                    setUser(data);
+                } else {
+                    setIsAuthenticated(false);
+                    setUser(null);
+                }
+            } catch (error) {
+                console.error('Error checking authentication', error);
+                setIsAuthenticated(false);
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        // Simulate an API call to check authentication status
-        // In a real application, you would replace this with an actual API call
-        // fetch('/api/auth/status')
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         setIsAuthenticated(data.isAuthenticated);
-        //         setLoading(false);
-        //     })
-        //     .catch(() => {
-        //         setIsAuthenticated(false);
-        //         setLoading(false);
-        //     });
-    }, []);
+        checkAuth();
+    }, [setUser]);
 
-    return { isAuthenticated, loading }; 
+    return { isAuthenticated, loading };
 };
 
 export default useAuth;

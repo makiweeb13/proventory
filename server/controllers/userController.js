@@ -27,6 +27,37 @@ const registerController = async (req, res, next) => {
     }
 }
 
+const loginController = async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+        const findUser = await userService.getUserByEmail(email);
+
+        if (!findUser) {
+            throw new ThrowError(404, 'User not found');
+        }
+
+        const passwordMatched = await bcrypt.compare(password, findUser.password);
+
+        if (!passwordMatched) {
+            throw new ThrowError(400, 'Password mismatch')
+        }
+
+        const token = jwt.sign({ id: findUser.user_id, name: findUser.name, email: findUser.email, role: findUser.role }, SECRET_KEY, { expiresIn: '1h'})
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000, sameSite: 'Strict' })
+        res.status(200).json({ message: 'Login successful' })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getUser = async (req, res) => {
+    const { id, name, email, role } = req.user
+    res.json({ id, name, email, role })
+}
+
 module.exports = {
-    registerController
+    registerController,
+    loginController,
+    getUser
 }

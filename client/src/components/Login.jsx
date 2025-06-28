@@ -8,7 +8,7 @@ function Login() {
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
             const API_URL = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${API_URL}/users/login`, {
+            const response = await fetch(`${API_URL}/user/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -39,7 +39,7 @@ function Login() {
 
     return (
         <div className="page">
-            <h2>Proventory</h2>
+            <h2>Welcome to Proventory!</h2>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username</label>
                 <input 
