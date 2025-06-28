@@ -38,8 +38,9 @@ function Login() {
 
     return (
         <div className="page">
+            <h2>Proventory</h2>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username:</label>
+                <label htmlFor="username">Username</label>
                 <input 
                     type="username" 
                     name="email" 
@@ -49,7 +50,7 @@ function Login() {
                     onBlur={handleBlur}
                 />
                 <br />
-                <label htmlFor="password">Password:</label>
+                <label htmlFor="password">Password</label>
                 <input 
                     type="password" 
                     name="password" 

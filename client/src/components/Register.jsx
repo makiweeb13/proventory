@@ -36,7 +36,9 @@ function Register() {
 
     return (
         <div className="page">
+            <h2>Proventory</h2>
             <form onSubmit={handleSubmit} >
+                <label htmlFor="username">Username</label>
                 <input 
                     type="username" 
                     name="username" 
@@ -47,6 +49,7 @@ function Register() {
                     className={errors.username && touched.username ? 'input-error' : ''}
                 />
                 <br />
+                <label htmlFor="email">Email</label>
                 <input 
                     type="email" 
                     name="email" 
@@ -58,6 +61,7 @@ function Register() {
                     className={errors.email && touched.email ? 'input-error' : ''}
                 />
                 <br />
+                <label htmlFor="password">Password</label>
                 <input 
                     type="password" 
                     name="password" 
@@ -69,6 +73,7 @@ function Register() {
                     className={errors.password && touched.password ? 'input-error' : ''}
                 />
                 <br />
+                <label htmlFor="confirm-password">Confirm Password</label>
                 <input 
                     type="password" 
                     name="confirmPassword" 

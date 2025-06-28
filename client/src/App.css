@@ -1,0 +1,60 @@
+.page {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    max-width: 350px;
+}
+
+.page form {
+    margin-top: 20px;
+}
+
+.page form input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    width: 350px;
+    background-color: #444; 
+    color: #fff;
+    margin: 15px 0;
+}
+
+/* Target input fields that have been autofilled */
+input:-webkit-autofill {
+    background-color: #444 !important; /* Set your desired background color */
+    color: #fff !important; /* Set your desired text color */
+    border: 2px solid #ccc; /* Maintain the border you prefer */
+    -webkit-text-fill-color: #fff !important; /* Ensure text color inside the input remains */
+    box-shadow: 0 0 0px 1000px #444 inset !important; /* Remove autofill glow effect */
+}
+
+.page form button {
+    position: relative;
+    left: 80%;
+    margin-bottom: 30px;
+}
+
+.page form p {
+    text-align: center;
+}
+
+.error-message {
+    color: rgb(154, 59, 59);
+    font-size: 15px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    margin: 0;
+}
+
+.page h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #fff;
+}
