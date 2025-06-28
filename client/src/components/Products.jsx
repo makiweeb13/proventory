@@ -1,8 +1,15 @@
+import useStore from "../store/store";
+import { useEffect } from "react";
+
 function Products() {
+    const { setTitle } = useStore();
+
+    useEffect(() => {
+        setTitle('Products');
+    }, [setTitle]);
+
     return (
-        <div>
-            <h2>Products</h2>
-        </div>
+        <></>
     )
 }
 

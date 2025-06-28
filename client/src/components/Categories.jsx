@@ -1,8 +1,15 @@
+import useStore from "../store/store";
+import { useEffect } from "react";
+
 function Categories() {
+    const { setTitle } = useStore();
+
+    useEffect(() => {
+        setTitle('Categories');
+    }, [setTitle]);
+
     return (
-        <div>
-            <h2>Categories</h2>
-        </div>
+        <></>
     )
 }
 

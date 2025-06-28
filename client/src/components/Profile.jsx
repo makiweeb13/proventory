@@ -1,8 +1,15 @@
+import useStore from "../store/store";
+import { useEffect } from "react";
+
 function Profile() {
+    const { setTitle } = useStore();
+
+    useEffect(() => {
+        setTitle('Profile');
+    }, [setTitle]);
+
     return (
-        <div>
-            <h2>Profile</h2>
-        </div>
+        <></>
     )
 }
 

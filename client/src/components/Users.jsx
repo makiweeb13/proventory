@@ -1,8 +1,15 @@
+import useStore from "../store/store";
+import { useEffect } from "react";
+
 function Users() {
+    const { setTitle } = useStore();
+
+    useEffect(() => {
+        setTitle('Users');
+    }, [setTitle]);
+
     return (
-        <div>
-            <h2>Users</h2>
-        </div>
+        <></>
     )
 }
 

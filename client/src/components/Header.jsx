@@ -1,11 +1,10 @@
 import useStore from "../store/store";
 function Header() {
-    const { user } = useStore();
+    const { title } = useStore();
 
     return (
         <header>
-            <h1>Proventory</h1>
-            <h2>{user.name}</h2>
+           <h2 className="header-title">{title}</h2>
         </header>
     )
 }
