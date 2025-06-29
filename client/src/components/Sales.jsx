@@ -1,5 +1,6 @@
 import useStore from "../store/store";
 import { useEffect } from "react";
+import SearchBar from "./SearchBar";
 
 function Sales() {
     const { setTitle } = useStore();
@@ -9,7 +10,9 @@ function Sales() {
     }, [setTitle]);
 
     return (
-        <></>
+        <>
+            <SearchBar />
+        </>
     )
 }
 

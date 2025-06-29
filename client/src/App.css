@@ -4,6 +4,25 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
+#root, .page-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+}
+
+body {
+    margin-left: 220px; /* Adjusted to account for the sidebar */
+    padding: 20px 0;
+}
+
 .page {
     margin: 0;
     position: absolute;
@@ -120,7 +139,7 @@ footer {
 .header-title {
     color: #fff;
     font-size: 1.5em;
-    margin-left: 18rem;
+    margin: 1rem;
 }
 
 .profile-container {
@@ -205,4 +224,100 @@ footer {
 
 .profile-logout-btn {
     margin-top: 2rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem;
+    background: #f5f5f5;
+    border-radius: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    width: 100%;
+    max-width: 340px;
+    margin: 1rem 1rem;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    padding: 0.6rem 0.8rem;
+    color: #222;
+    border-radius: 24px;
+}
+
+.search-bar input[type="text"]::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+.add-user-form {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2rem 2.5rem;
+    max-width: 450px;
+    margin: 1rem;
+}
+
+.add-user-form h2 {
+    margin-bottom: 1rem;
+    color: #222;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    transition: border 0.2s;
+    color: #333;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border: 1.5px solid #61dafb;
+    outline: none;
+    background: #fff;
+}
+
+.add-user-btn {
+    margin-top: 20px;
+    position: relative;
+    left: 71%;
+}
+
+.form-error {
+    color: #ff5858;
+    background: #ffeaea;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: 0.98rem;
+}
+
+.form-success {
+    color: #2ecc40;
+    background: #eaffea;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: 0.98rem;
 }
