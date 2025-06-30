@@ -84,12 +84,41 @@ const logoutController = (req, res) => {
  
   res.status(200).json({ message: 'Logged out successfully' });
 }
-    
+
+const updateUserController = async (req, res, next) => {
+    const { id } = req.params;
+    const { name, email, role } = req.body;
+
+    if (!name || !email || !role) {
+        return ThrowError(res, 400, 'All fields are required');
+    }
+
+    try {
+        await userService.updateUser(id, name, email, role);
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        next(error);
+    }
+}
+
+const deleteUserController = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        await userService.deleteUser(id);
+        res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
     getCurrentUser,
     getUserController,
     getAllUsersController,
-    logoutController
+    logoutController,
+    updateUserController,
+    deleteUserController
 }

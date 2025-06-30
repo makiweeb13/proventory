@@ -22,9 +22,7 @@ function ManageUsers({ fetchUsers }) {
             <h1 className="manage-users-title">Manage Users</h1>
             <div className="manage-users-list">
                 {users.map(user => (
-                    <tr key={user.user_id}>
-                        <User user={user} />
-                    </tr>
+                    <User user={user} key={user.user_id} />
                 ))}
             </div>
         </div>

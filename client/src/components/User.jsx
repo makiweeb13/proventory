@@ -13,6 +13,48 @@ function User({ user }) {
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const handleEdit = async (form) => {
+        try {
+            const response = await fetch(`${API_URL}/user/${form.id}`, {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(form),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update user');
+            }
+
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`${API_URL}/user/${form.id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete user');
+            }
+
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div className="user-card">
             <div className="user-field">
@@ -49,8 +91,8 @@ function User({ user }) {
                 </select>
             </div>
             <div className="user-actions">
-                <button className="edit-btn" >Edit</button>
-                <button className="delete-btn" >Delete</button>
+                <button className="edit-btn" onClick={() => handleEdit(form)}>Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(form.id)}>Delete</button>
             </div>
         </div>
     );
