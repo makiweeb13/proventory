@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { userSchema } from "../schemas/register-schema";
 
-function AddUsers() {
+function AddUsers({ fetchUsers }) {
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -12,11 +12,13 @@ function AddUsers() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(values),
+                credentials: 'include'
             });
             
             if (response.ok) {
                 resetForm();
                 setSubmitting(false);
+                fetchUsers(); // Refresh the user list after adding a new user
                 console.log("User added successfully");
             }
         } catch (error) {

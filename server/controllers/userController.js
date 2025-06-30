@@ -69,6 +69,15 @@ const getUserController = async (req, res, next) => {
     }
 }
 
+const getAllUsersController = async (req, res, next) => {
+    try {
+        const users = await userService.getAllUsers();
+        res.json(users);
+    } catch (error) {
+        next(error);
+    }
+}
+
 const logoutController = (req, res) => {
   // Clear the JWT cookie
   res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'strict' });
@@ -81,5 +90,6 @@ module.exports = {
     loginController,
     getCurrentUser,
     getUserController,
+    getAllUsersController,
     logoutController
 }

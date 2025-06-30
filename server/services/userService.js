@@ -19,6 +19,15 @@ const getUserById = async ( id ) => {
     return user
 }
 
+const getAllUsers = async () => {
+    const users = await prisma.users.findMany({
+        orderBy: {
+            user_id: 'asc'
+        }
+    })
+    return users
+}
+
 const addUser = async( name, email, hashedPassword, role ) => {
     await prisma.users.create({
         data: {
@@ -33,5 +42,6 @@ const addUser = async( name, email, hashedPassword, role ) => {
 module.exports = {
     getUserByEmail,
     addUser,
-    getUserById
+    getUserById,
+    getAllUsers
 }

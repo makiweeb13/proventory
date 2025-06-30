@@ -262,6 +262,7 @@ footer {
     padding: 2rem 2.5rem;
     max-width: 450px;
     margin: 1rem;
+    max-height: fit-content;
 }
 
 .add-user-form h2 {
@@ -300,8 +301,6 @@ footer {
 
 .add-user-btn {
     margin-top: 20px;
-    position: relative;
-    left: 71%;
 }
 
 .form-error {
@@ -320,4 +319,97 @@ footer {
     padding: 0.5rem 1rem;
     text-align: center;
     font-size: 0.98rem;
+}
+
+/* User.css */
+.user-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 1rem;
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1.2rem;
+    color: #000;
+}
+
+.user-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.user-field label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.2rem;
+}
+
+.user-field input,
+.user-field select {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    color: #000;
+}
+
+.user-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.edit-btn {
+    background: #61dafb;
+    color: #fff;
+}
+
+.delete-btn {
+    background: #ff5858;
+    color: #fff;
+}
+
+/* ManageUsers.css */
+.manage-users-container {
+    max-width: 900px;
+    margin: 1rem;
+    padding: 2rem;
+    background: #f7f7f7;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
+
+.manage-users-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #222;
+}
+
+.manage-users-loading,
+.manage-users-empty {
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    margin-top: 3rem;
+}
+
+.side {
+    display: flex;
+    justify-content: space-around;
 }
