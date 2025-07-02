@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { userSchema } from "../schemas/register-schema";
 import useStore from "../store/store";
 
-function AddUsers({ fetchUsers }) {
+function AddUsers() {
 
     const { setStatusMessage } = useStore();
 
@@ -28,7 +28,6 @@ function AddUsers({ fetchUsers }) {
             setStatusMessage("Error adding user", "error");
         } finally {
             setSubmitting(false);
-            fetchUsers();
         }
     };
 
