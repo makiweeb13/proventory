@@ -1,16 +1,20 @@
 import useStore from "../store/store";
 
-function SearchBar({ searchTerm, setSearchTerm }) {
+function SearchBar({ search, setSearch }) {
 
     const { title } = useStore();
+
+    const handleChange = e => {
+        setSearch(e.target.value);
+    }
 
     return (
         <div className="search-bar">
         <input
             type="text"
             placeholder={`Search ${title == 'Sales' ? 'Products' : title}...`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={search}
+            onChange={handleChange}
         />
         </div>
     );

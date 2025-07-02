@@ -21,7 +21,6 @@ function AddUsers({ fetchUsers }) {
             if (response.ok) {
                 resetForm();
                 setSubmitting(false);
-                fetchUsers(); // Refresh the user list after adding a new user
                 setStatusMessage("User added successfully");
             }
         } catch (error) {
@@ -29,6 +28,7 @@ function AddUsers({ fetchUsers }) {
             setStatusMessage("Error adding user", "error");
         } finally {
             setSubmitting(false);
+            fetchUsers();
         }
     };
 

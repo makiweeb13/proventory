@@ -19,10 +19,16 @@ const getUserById = async ( id ) => {
     return user
 }
 
-const getAllUsers = async () => {
+const getAllUsers = async ( search ) => {
     const users = await prisma.users.findMany({
         orderBy: {
             user_id: 'asc'
+        },
+        where: {
+            OR: [
+                { name: { contains: search } },
+                { email: { contains: search } }
+            ]
         }
     })
     return users
