@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import User from './User';
 import useStore from '../store/store';
+import StatusMessage from './StatusMessage';
 
 function ManageUsers({ fetchUsers }) {
-    const { users } = useStore();
+    const { users, statusMessage, statusType } = useStore();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,6 +21,7 @@ function ManageUsers({ fetchUsers }) {
     return (
         <div className="manage-users-container">
             <h1 className="manage-users-title">Manage Users</h1>
+            <StatusMessage message={statusMessage} type={statusType} />
             <div className="manage-users-list">
                 {users.map(user => (
                     <User user={user} key={user.user_id} />

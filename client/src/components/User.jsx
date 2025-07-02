@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useStore from "../store/store";
 
 function User({ user }) {
     const [form, setForm] = useState({
@@ -14,6 +15,7 @@ function User({ user }) {
     };
 
     const API_URL = import.meta.env.VITE_API_URL;
+    const { setStatusMessage } = useStore();
 
     const handleEdit = async (form) => {
         try {
@@ -31,14 +33,18 @@ function User({ user }) {
             }
 
             const data = await response.json();
-            console.log(data);
+            setStatusMessage(data.message);
         } catch (error) {
             console.error(error);
+            setStatusMessage('Error updating user information', 'error');
         }
     }
 
     const handleDelete = async () => {
         try {
+            const confirmed = window.confirm(`Proceed to delete user with the id ${form.id}?`);
+            if (!confirmed) return;
+
             const response = await fetch(`${API_URL}/user/${form.id}`, {
                 method: 'DELETE',
                 credentials: 'include'
@@ -49,9 +55,10 @@ function User({ user }) {
             }
 
             const data = await response.json();
-            console.log(data);
+            setStatusMessage(data.message);
         } catch (error) {
             console.error(error);
+            setStatusMessage('Error deleting user', 'error');
         }
     }
 

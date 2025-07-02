@@ -412,3 +412,41 @@ footer {
     display: flex;
     justify-content: space-around;
 }
+
+/* StatusMessage.css */
+.status-message {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.9rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1.08rem;
+    font-weight: 500;
+    margin: 1rem 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    background: #f7f7f7;
+    border-left: 5px solid #bbb;
+    animation: fadeIn 0.3s;
+}
+
+.status-message.success {
+    background: #eaffea;
+    border-left-color: #2ecc40;
+    color: #217a2c;
+}
+
+.status-message.error {
+    background: #ffeaea;
+    border-left-color: #ff5858;
+    color: #b12a2a;
+}
+
+.status-message .icon {
+    font-size: 1.3rem;
+    margin-right: 0.3rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px);}
+    to { opacity: 1; transform: translateY(0);}
+}

@@ -1,7 +1,10 @@
 import { useFormik } from "formik";
 import { userSchema } from "../schemas/register-schema";
+import useStore from "../store/store";
 
 function AddUsers({ fetchUsers }) {
+
+    const { setStatusMessage } = useStore();
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -19,10 +22,11 @@ function AddUsers({ fetchUsers }) {
                 resetForm();
                 setSubmitting(false);
                 fetchUsers(); // Refresh the user list after adding a new user
-                console.log("User added successfully");
+                setStatusMessage("User added successfully");
             }
         } catch (error) {
             console.error("Error adding user:", error);
+            setStatusMessage("Error adding user", "error");
         } finally {
             setSubmitting(false);
         }
