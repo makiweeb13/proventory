@@ -22,7 +22,8 @@ const routes = require('./routes');
 
 // Routes
 app.use('/user', routes.userRoutes);
-app.use('/category', routes.categoryRoutes)
+app.use('/category', routes.categoryRoutes);
+app.use('/product', routes.productRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
