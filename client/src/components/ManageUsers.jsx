@@ -26,17 +26,17 @@ function ManageUsers() {
     if (loading) {
         return <div>Loading...</div>;
     }
-    if (users.length === 0) {
-        return <div>No users found.</div>;
-    } 
     return (
         <div className="manage-users-container">
             <h1 className="manage-users-title">Manage Users</h1>
             <StatusMessage message={statusMessage} type={statusType} />
             <div className="manage-users-list">
-                {users.map(user => (
-                    <User user={user} key={user.user_id} />
-                ))}
+                {
+                    users.length == 0 ? 'No users found' :
+                    users.map(user => (
+                        <User user={user} key={user.user_id} />
+                    ))
+                }
             </div>
         </div>
     );

@@ -15,7 +15,7 @@ function User({ user }) {
     };
 
     const API_URL = import.meta.env.VITE_API_URL;
-    const { setStatusMessage } = useStore();
+    const { setStatusMessage, deleteUser } = useStore();
 
     const handleEdit = async (form) => {
         try {
@@ -56,6 +56,7 @@ function User({ user }) {
 
             const data = await response.json();
             setStatusMessage(data.message);
+            deleteUser(form.id);
         } catch (error) {
             console.error(error);
             setStatusMessage('Error deleting user', 'error');

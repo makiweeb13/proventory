@@ -4,7 +4,7 @@ import useStore from "../store/store";
 
 function AddUsers() {
 
-    const { setStatusMessage } = useStore();
+    const { setStatusMessage, addUser } = useStore();
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -17,11 +17,12 @@ function AddUsers() {
                 body: JSON.stringify(values),
                 credentials: 'include'
             });
-            
+            const data = await response.json();
             if (response.ok) {
                 resetForm();
                 setSubmitting(false);
-                setStatusMessage("User added successfully");
+                setStatusMessage(data.message);
+                addUser(data.user);
             }
         } catch (error) {
             console.error("Error adding user:", error);

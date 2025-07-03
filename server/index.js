@@ -21,7 +21,8 @@ dotenv.config();
 const routes = require('./routes');
 
 // Routes
-app.use('/user', routes.userRoutes)
+app.use('/user', routes.userRoutes);
+app.use('/category', routes.categoryRoutes)
 
 // Error handling middleware
 app.use(errorHandler);

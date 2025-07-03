@@ -5,11 +5,12 @@ import AddUsers from "./AddUsers";
 import ManageUsers from "./ManageUsers";
 
 function Users() {
-    const { setTitle, search, setSearch } = useStore();
+    const { setTitle, search, setSearch, setStatusMessage } = useStore();
 
     useEffect(() => {
         setTitle('Users');
-    }, [setTitle]);
+        setStatusMessage('');
+    }, [setTitle, setStatusMessage]);
 
     return (
         <>

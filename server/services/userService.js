@@ -35,7 +35,7 @@ const getAllUsers = async ( search ) => {
 }
 
 const addUser = async( name, email, hashedPassword, role ) => {
-    await prisma.users.create({
+    const user = await prisma.users.create({
         data: {
             name,
             email,
@@ -43,6 +43,7 @@ const addUser = async( name, email, hashedPassword, role ) => {
             role
         }
     })
+    return user
 }
 
 const updateUser = async ( id, name, email, role ) => {

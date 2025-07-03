@@ -20,8 +20,8 @@ const registerController = async (req, res, next) => {
             return ThrowError(res, 400, 'User already exists');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        userService.addUser(name, email, hashedPassword, role);
-        res.status(201).json({ message: 'User registered successfully' });
+        const user = await userService.addUser(name, email, hashedPassword, role);
+        res.status(201).json({ user, message: 'User registered successfully' });
     } catch (error) {
         next(error);
     }
