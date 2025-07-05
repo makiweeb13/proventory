@@ -333,6 +333,7 @@ footer {
     gap: 1.2rem;
     color: #000;
     width: fit-content;
+    flex-wrap: wrap;
 }
 
 .user-field {

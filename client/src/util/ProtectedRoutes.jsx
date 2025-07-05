@@ -3,7 +3,7 @@ import useAuth from './useAuth';
 
 const ProtectedRoutes = () => {
   const { isAuthenticated, loading } = useAuth();
-
+  
   if (!loading) {
     return isAuthenticated ? <Outlet /> : <Navigate to="/login" />
   }
