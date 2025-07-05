@@ -10,7 +10,7 @@ const addProductController = async (req, res, next) => {
 
     try {
         const product = await productService.addProduct(name, stock, buying_price, selling_price, category_id);
-        return res.status(201).json(product);
+        return res.status(200).json({ product, message: 'Product added successfully'});
     } catch (error) {
         return next(error);
     }
@@ -36,7 +36,7 @@ const updateProductController = async (req, res, next) => {
 
     try {
         const product = await productService.updateProduct(id, name, stock, buying_price, selling_price, category_id);
-        return res.status(200).json(product);
+        return res.status(200).json({ product, message: 'Product updated successfully' });
     } catch (error) {
         return next(error);
     }
