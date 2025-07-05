@@ -5,9 +5,11 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const { errorHandler } = require('./middleware/errorHandler');
 
+dotenv.config();
+
 // Configure CORS to allow frontend origin and allow credentials
 const corsOptions = {
-  origin: 'http://localhost:5173', // frontend URL
+  origin: process.env.FRONTEND_URL, // frontend URL
   credentials: true // Allow credentials (cookies, authorization headers)
 };
 
@@ -15,7 +17,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
-dotenv.config();
 
 // Import routes
 const routes = require('./routes');
@@ -24,6 +25,7 @@ const routes = require('./routes');
 app.use('/user', routes.userRoutes);
 app.use('/category', routes.categoryRoutes);
 app.use('/product', routes.productRoutes);
+app.use('/sale', routes.saleRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
