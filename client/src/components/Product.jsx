@@ -92,7 +92,7 @@ function Product({ product }) {
                 />
             </div>
             <div className="user-field">
-                <label>Buying Price:</label>
+                <label>Buying Price (<span>&#8369;</span>):</label>
                 <input
                     type="number"
                     name="buying_price"
@@ -101,7 +101,7 @@ function Product({ product }) {
                 />
             </div>
             <div className="user-field">
-                <label>Selling Price:</label>
+                <label>Selling Price (<span>&#8369;</span>):</label>
                 <input
                     type="number"
                     name="selling_price"

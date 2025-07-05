@@ -3,13 +3,13 @@ const prisma = new PrismaClient();
 
 
 const addSale = async (product_id, user_id, quantity, selling_price) => {
-    const amount = selling_price * quantity;
+    const amount = parseFloat(selling_price) * parseInt(quantity);
 
     const sale = await prisma.sales.create({
         data: {
             product_id: parseInt(product_id),
-            user_id,
-            amount: selling_price * quantity,
+            user_id: parseInt(user_id),
+            amount: amount,
             sale_date: new Date()
         }
     });
@@ -20,7 +20,7 @@ const addSale = async (product_id, user_id, quantity, selling_price) => {
         },
         data: {
             stock: {
-                decrement: quantity
+                decrement: parseInt(quantity)
             }
         }
     })

@@ -35,6 +35,9 @@ const useStore = create((set, get) => ({
     })),
     setProducts: (products) => set({ products }),
     addProduct: (product) => set((state) => ({ products: [...state.products, product] })),
+    updateProduct: (updatedProduct) => set((state) => ({
+        products: state.products.map(product => product.product_id === updatedProduct.product_id ? updatedProduct : product)
+    })),
     deleteProduct: (id) => set((state) => ({
         products: state.products.filter(product => product.product_id !== id)
     }))

@@ -13,6 +13,13 @@ const getAllProducts = async (search) => {
     return products;
 };
 
+const getProductById = async (id) => {
+    const product = await prisma.products.findUnique({
+        where: { product_id: parseInt(id) }
+    });
+    return product;
+};
+
 const addProduct = async (name, stock, buying_price, selling_price, category_id) => {
     const product = await prisma.products.create({
         data: { 
@@ -53,6 +60,7 @@ const deleteProduct = async (id) => {
 
 module.exports = {
     getAllProducts,
+    getProductById,
     addProduct,
     updateProduct,
     deleteProduct
