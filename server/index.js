@@ -26,6 +26,7 @@ app.use('/user', routes.userRoutes);
 app.use('/category', routes.categoryRoutes);
 app.use('/product', routes.productRoutes);
 app.use('/sale', routes.saleRoutes);
+app.use('/stat', routes.statRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

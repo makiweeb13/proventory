@@ -1,5 +1,6 @@
 import useStore from "../store/store";
 import { useEffect } from "react";
+import StatsDisplay from "./StatsDisplay";
 
 function Dashboard() {
 
@@ -11,6 +12,7 @@ function Dashboard() {
 
     return (
         <>
+            <StatsDisplay />
         </>
     )
 }
