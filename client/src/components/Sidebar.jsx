@@ -14,15 +14,19 @@ function Sidebar() {
                 <NavLink to={`profile/${user.id}`} className="sidebar-link">
                     Profile
                 </NavLink>
-                <NavLink to="/users" className="sidebar-link">
-                    Users
-                </NavLink>
-                <NavLink to="/categories" className="sidebar-link">
-                    Categories
-                </NavLink>
-                <NavLink to="/products" className="sidebar-link">
-                    Products
-                </NavLink>
+                { user.role === 'admin' &&
+                    <>
+                    <NavLink to="/users" className="sidebar-link">
+                        Users
+                    </NavLink>
+                    <NavLink to="/categories" className="sidebar-link">
+                        Categories
+                    </NavLink>
+                    <NavLink to="/products" className="sidebar-link">
+                        Products
+                    </NavLink>
+                    </>
+                }
                 <NavLink to="/sales" className="sidebar-link">
                     Sales
                 </NavLink>
