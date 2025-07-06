@@ -87,8 +87,9 @@ function Product({ product }) {
                 <input
                     type="number"
                     name="stock"
-                    value={form.stock}
+                    value={form.stock < 1 ? 1 : form.stock}
                     onChange={handleChange}
+                    min={1}
                 />
             </div>
             <div className="user-field">
