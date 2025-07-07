@@ -1,12 +1,16 @@
 import { NavLink } from "react-router-dom";
 import useStore from "../store/store";
+import proventoryLogo from "../assets/proventory-logo.png"; // Assuming you have a logo image
 
 function Sidebar() {
     const { user } = useStore();
 
     return ( 
         <aside className="sidebar">
-            <h2 className="sidebar-title">Proventory</h2>
+            <div className="sidebar-header">
+                <img src={proventoryLogo} alt="Proventory Logo" />
+                <h1 className="sidebar-title">Proventory</h1>
+            </div>
             <nav className="sidebar-nav">
                 <NavLink to="/" className="sidebar-link">
                     Dashboard
