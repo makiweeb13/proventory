@@ -58,10 +58,23 @@ const deleteProduct = async (id) => {
     });
 };
 
+const getTopProducts = async (limit = 10) => {
+    return await prisma.$queryRaw`
+        SELECT p.product_id, p.name, p.stock, COUNT(s.product_id) as totalSold
+        FROM products p
+        JOIN sales s ON p.product_id = s.product_id
+        GROUP BY p.product_id, p.name, p.stock
+        HAVING COUNT(s.product_id) > 0
+        ORDER BY totalSold DESC
+        LIMIT ${Number(limit)}
+    `;
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getTopProducts
 };

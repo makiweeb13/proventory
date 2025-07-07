@@ -30,6 +30,9 @@ function SalesReport({ period = "daily" }) {
           if (period === "weekly") {
             return `W${item.week} ${item.year}`;
           }
+          if (period === "monthly") {
+            return `${item.year}-${String(item.month).padStart(2, '0')}`;
+          }
           if (period === "yearly") {
             return item.year.toString();
           }

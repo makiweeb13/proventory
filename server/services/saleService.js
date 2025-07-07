@@ -49,6 +49,15 @@ const getAllSales = async (period = 'daily') => {
             `;
             break;
 
+        case 'monthly':
+            sales = await prisma.$queryRaw`
+                SELECT YEAR(sale_date) as year, MONTH(sale_date) as month, SUM(amount) as totalSales
+                FROM sales
+                GROUP BY year, month
+                ORDER BY year ASC, month ASC
+            `;
+            break;
+
         case 'yearly':
             sales = await prisma.$queryRaw`
                 SELECT YEAR(sale_date) as year, SUM(amount) as totalSales

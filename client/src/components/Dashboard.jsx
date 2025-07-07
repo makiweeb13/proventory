@@ -2,6 +2,7 @@ import useStore from "../store/store";
 import { useEffect } from "react";
 import StatsDisplay from "./StatsDisplay";
 import SalesReport from "./SalesReport";
+import ProductLeaderboard from "./ProductLeaderboard";
 
 function Dashboard() {
 
@@ -14,9 +15,15 @@ function Dashboard() {
     return (
         <>
             <StatsDisplay />
-            <SalesReport period="daily" />
-            <SalesReport period="weekly" />
-            <SalesReport period="yearly" />
+            <div className="side">
+                <ProductLeaderboard />
+                <div className="grid">
+                    <SalesReport period="daily" />
+                    <SalesReport period="weekly" />
+                    <SalesReport period="monthly" />
+                    <SalesReport period="yearly" />
+                </div>
+            </div>
         </>
     );
 }

@@ -43,5 +43,6 @@ const convertBigInt = (obj) => {
 
 module.exports = {
     addSaleController,
-    getAllSalesController
+    getAllSalesController,
+    convertBigInt
 }

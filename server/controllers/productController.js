@@ -1,5 +1,6 @@
 const { ThrowError } = require('../middleware/errorHandler');
 const productService = require('../services/productService');
+const saleController = require('./saleController');
 
 const addProductController = async (req, res, next) => {
     const { name, stock, buying_price, selling_price, category_id } = req.body;
@@ -53,9 +54,19 @@ const deleteProductController = async (req, res, next) => {
     }
 };
 
+const getTopProductsController = async (req, res, next) => {
+    try {
+        const topProducts = await productService.getTopProducts(10);
+        res.json(saleController.convertBigInt(topProducts));
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     addProductController,
     getAllProductsController,
     updateProductController,
-    deleteProductController
+    deleteProductController,
+    getTopProductsController
 };
