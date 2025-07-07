@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import ProtectedRoutes from './util/ProtectedRoutes';
 import Dashboard from './components/Dashboard';
-import Register from './components/Register';
+import PermittedRoutes from './util/PermittedRoutes';
 import Login from './components/Login';
 import PageNotFound from './components/PageNotFound';
 import Products from './components/Products';
@@ -19,9 +19,11 @@ function App() {
         <Route path="/" element={<ProtectedRoutes />} >
           <Route element={<PageLayout />} >
             <Route index element={<Dashboard />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/users" element={<Users />} />
+            <Route element={<PermittedRoutes />} >
+              <Route path="/users" element={<Users />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/products" element={<Products />} />
+            </Route>
             <Route path="/sales" element={<Sales />} />
             <Route path="/profile/:id" element={<Profile />} />
           </Route>

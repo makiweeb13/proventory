@@ -1,5 +1,16 @@
+import useStore from "../store/store";
+
 function Stat({ value, label }) {
+    const { user } = useStore();
     const isCurrency = label === 'Total Sales' || label === 'Total Sales by User';
+
+    if (user.role !== 'admin' && label === 'Total Sales') {
+        return null;
+    }
+
+    if (value === undefined || value === null) {
+        return null;
+    }
 
     return (
         <div className="stat-card">
