@@ -534,6 +534,12 @@ footer {
     }
 }
 
+.capitalize {
+    text-transform: capitalize;
+    font-weight: bold;
+    padding: 5px;
+}
+
 /* Sidebar.css */
 
 .sidebar-header {

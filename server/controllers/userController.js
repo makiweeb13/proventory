@@ -88,14 +88,14 @@ const logoutController = (req, res) => {
 
 const updateUserController = async (req, res, next) => {
     const { id } = req.params;
-    const { name, email, role } = req.body;
+    const { name, email } = req.body;
 
-    if (!name || !email || !role) {
+    if (!name || !email ) {
         return ThrowError(res, 400, 'All fields are required');
     }
 
     try {
-        await userService.updateUser(id, name, email, role);
+        await userService.updateUser(id, name, email );
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
         next(error);

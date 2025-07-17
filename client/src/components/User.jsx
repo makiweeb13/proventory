@@ -5,8 +5,7 @@ function User({ user }) {
     const [form, setForm] = useState({
         id: user.user_id,
         name: user.name,
-        email: user.email,
-        role: user.role
+        email: user.email
     });
 
     const handleChange = (e) => {
@@ -89,14 +88,7 @@ function User({ user }) {
             </div>
             <div className="user-field">
                 <label>Role:</label>
-                <select
-                    name="role"
-                    value={form.role}
-                    onChange={handleChange}
-                >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
+                <p className="capitalize">{user.role}</p>
             </div>
             <div className="user-actions">
                 <button className="edit-btn" onClick={() => handleEdit(form)}>Edit</button>

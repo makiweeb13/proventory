@@ -46,15 +46,14 @@ const addUser = async( name, email, hashedPassword, role ) => {
     return user
 }
 
-const updateUser = async ( id, name, email, role ) => {
+const updateUser = async ( id, name, email ) => {
     await prisma.users.update({
         where: {
             user_id: parseInt(id)
         },
         data: {
             name,
-            email,
-            role
+            email
         }
     })
 }
