@@ -92,7 +92,7 @@ function User({ user }) {
             </div>
             <div className="user-actions">
                 <button className="edit-btn" onClick={() => handleEdit(form)}>Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(form.id)}>Delete</button>
+                { user.role === 'user' && <button className="delete-btn" onClick={() => handleDelete(form.id)}>Delete</button> }
             </div>
         </div>
     );
