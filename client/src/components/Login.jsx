@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { userSchema } from '../schemas/login-schema';
+import { useState } from 'react';
 
 function Login() {
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -18,13 +20,15 @@ function Login() {
             if (response.ok) {
                 console.log(data.message);
                 resetForm();
-                setSubmitting(false) 
+                setSubmitting(false);
                 navigate('/');
             } else {
                 console.error('Login failed', data.message);
+                setError(data.message);
             }
         } catch(err) {
             console.error('Login request failed:', err)
+            setError('An error occurred. Please try again.');
         }
     }
 
@@ -64,6 +68,7 @@ function Login() {
                 <br />
                 { errors.email && touched.email && <p className='error-message'>{errors.email}</p> }
                 { errors.password && touched.password && <p className='error-message'>{errors.password}</p> }
+                { error && <p className='error-message'>{error}</p> }
                 <button type="submit">Login</button>
             </form>
         </div>
