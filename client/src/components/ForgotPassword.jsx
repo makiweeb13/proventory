@@ -1,19 +1,18 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { userSchema } from '../schemas/login-schema';
 import { useState } from 'react';
 
-function Login() {
+function ForgotPassword() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
             const API_URL = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${API_URL}/user/login`, {
+            const response = await fetch(`${API_URL}/user/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify(values)
             })
             const data = await response.json();
@@ -21,13 +20,13 @@ function Login() {
                 console.log(data.message);
                 resetForm();
                 setSubmitting(false);
-                navigate('/');
+                navigate('/login');
             } else {
-                console.error('Login failed', data.message);
+                console.error('Reset password failed', data.message);
                 setError(data.message);
             }
         } catch(err) {
-            console.error('Login request failed:', err)
+            console.error('Reset password request failed:', err)
             setError('An error occurred. Please try again.');
         }
     }
@@ -43,7 +42,7 @@ function Login() {
 
     return (
         <div className="page">
-            <h2>Welcome to Proventory!</h2>
+        
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email</label>
                 <input 
@@ -55,12 +54,12 @@ function Login() {
                     onBlur={handleBlur}
                 />
                 <br />
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">New Password</label>
                 <input 
                     type="password" 
                     name="password" 
                     id="password" 
-                    placeholder="password"
+                    placeholder="new password"
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -69,12 +68,10 @@ function Login() {
                 { errors.email && touched.email && <p className='error-message'>{errors.email}</p> }
                 { errors.password && touched.password && <p className='error-message'>{errors.password}</p> }
                 { error && <p className='error-message'>{error}</p> }
-                <NavLink to="/forgot-password">Forgot Password?</NavLink>
-                <br />
-                <button type="submit">Login</button>
+                <button type="submit">Save</button>
             </form>
         </div>
     )
 }
 
-export default Login;
+export default ForgotPassword;

@@ -66,11 +66,23 @@ const deleteUser = async ( id ) => {
     })
 }
 
+const updateUserPassword = async ( id, hashedPassword ) => {
+    await prisma.users.update({
+        where: {
+            user_id: parseInt(id)
+        },
+        data: {
+            password: hashedPassword
+        }
+    })
+}
+
 module.exports = {
     getUserByEmail,
     addUser,
     updateUser,
     deleteUser,
     getUserById,
-    getAllUsers
+    getAllUsers,
+    updateUserPassword
 }

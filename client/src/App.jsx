@@ -10,6 +10,7 @@ import Categories from './components/Categories';
 import Users from './components/Users';
 import Sales from './components/Sales';
 import Profile from './components/Profile';
+import ForgotPassword from './components/ForgotPassword';
 import './App.css'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>

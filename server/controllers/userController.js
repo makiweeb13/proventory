@@ -113,6 +113,27 @@ const deleteUserController = async (req, res, next) => {
     }
 }
 
+const forgotPasswordController = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return ThrowError(res, 400, 'Email and password are required');
+    }
+
+    try {
+        const user = await userService.getUserByEmail(email);
+        if (!user) {
+            return ThrowError(res, 404, 'User not found');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await userService.updateUserPassword(user.user_id, hashedPassword);
+        res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
@@ -121,5 +142,6 @@ module.exports = {
     getAllUsersController,
     logoutController,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    forgotPasswordController
 }
