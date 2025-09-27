@@ -40,10 +40,6 @@ function Sale({ product }) {
     return (
         <div className="user-card">
             <div className="user-field">
-                <label>ID:</label>
-                <h2>{form.product_id}</h2>
-            </div>
-            <div className="user-field">
                 <label>Product:</label>
                 <p>{product.name}</p>
             </div>

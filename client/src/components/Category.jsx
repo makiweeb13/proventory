@@ -64,10 +64,6 @@ function Category({ category }) {
     return (
         <div className="user-card">
             <div className="user-field">
-                <label>ID:</label>
-                <h2>{form.id}</h2>
-            </div>
-            <div className="user-field">
                 <label>Category:</label>
                 <input
                     type="text"

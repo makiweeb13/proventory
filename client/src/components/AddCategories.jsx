@@ -25,10 +25,12 @@ function AddCategories() {
                 setSubmitting(false);
                 setStatusMessage(data.message);
                 addCategory(data.category);
+            } else {
+                setStatusMessage(`Adding category failed: ${data.message}`, "error");
             }
         } catch (error) {
             console.error("Error adding category:", error);
-            setStatusMessage("Error adding category", "error");
+            setStatusMessage(`Error adding category: ${error.message}`, "error");
         } finally {
             setSubmitting(false);
             

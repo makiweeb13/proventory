@@ -11,13 +11,13 @@ const registerController = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password || !role) {
-        return ThrowError(res, 400, 'All fields are required');
+        throw new ThrowError(400, 'All fields are required');
     }
 
     try {
         const existingUser = await userService.getUserByEmail(email);
         if (existingUser) {
-            return ThrowError(res, 400, 'User already exists');
+            throw new ThrowError(400, 'User already exists');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userService.addUser(name, email, hashedPassword, role);
@@ -61,7 +61,7 @@ const getUserController = async (req, res, next) => {
     try {
         const user = await userService.getUserById(id);
         if (!user) {
-            return ThrowError(res, 404, 'User not found');
+            throw new ThrowError(404, 'User not found');
         }
         res.json(user);
     } catch (error) {
@@ -91,7 +91,7 @@ const updateUserController = async (req, res, next) => {
     const { name, email } = req.body;
 
     if (!name || !email ) {
-        return ThrowError(res, 400, 'All fields are required');
+        throw new ThrowError(400, 'All fields are required');
     }
 
     try {
@@ -117,13 +117,13 @@ const forgotPasswordController = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return ThrowError(res, 400, 'Email and password are required');
+        throw new ThrowError(400, 'Email and password are required');
     }
 
     try {
         const user = await userService.getUserByEmail(email);
         if (!user) {
-            return ThrowError(res, 404, 'User not found');
+            throw new ThrowError(404, 'User not found');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);

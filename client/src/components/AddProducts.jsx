@@ -23,6 +23,8 @@ function AddProducts() {
                 setSubmitting(false);
                 setStatusMessage(data.message);
                 addProduct(data.product);
+            } else {
+                setStatusMessage(data.message, "error");
             }
         } catch (error) {
             console.error("Error adding product:", error);

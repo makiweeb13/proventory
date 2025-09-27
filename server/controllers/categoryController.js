@@ -5,9 +5,14 @@ const addCategoryController = async (req, res, next) => {
     const { name } =  req.body;
 
     if (!name) {
-        return new ThrowError(res, 400, 'Category name required');
+        throw new ThrowError(400, 'Category name required');
     }
 
+    existingCategory = await categoryService.getCategoryByName(name);
+    if (existingCategory) {
+        throw new ThrowError(400, 'Category already exists');
+    }
+    
     try {
         const category = await categoryService.addCategory(name);
         res.status(201).json({ category, message: 'Category added successfully' });
@@ -30,7 +35,7 @@ const updateCategoryController = async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
     if (!name) {
-        return new ThrowError(res, 400, 'Category name required');
+        throw new ThrowError(400, 'Category name required');
     }
     try {
         const category = await categoryService.updateCategory(id, name);

@@ -23,10 +23,12 @@ function AddUsers() {
                 setSubmitting(false);
                 setStatusMessage(data.message);
                 addUser(data.user);
+            } else {
+                setStatusMessage(`Registration failed: ${data.message}`, "error");
             }
         } catch (error) {
             console.error("Error adding user:", error);
-            setStatusMessage("Error adding user", "error");
+            setStatusMessage(`Error adding user: ${error.message}`, "error");
         } finally {
             setSubmitting(false);
         }

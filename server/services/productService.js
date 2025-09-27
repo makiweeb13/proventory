@@ -20,6 +20,13 @@ const getProductById = async (id) => {
     return product;
 };
 
+const getProductByName = async (name) => {
+    const product = await prisma.products.findFirst({
+        where: { name: name }
+    });
+    return product;
+};
+
 const addProduct = async (name, stock, buying_price, selling_price, category_id) => {
     const product = await prisma.products.create({
         data: { 
@@ -76,5 +83,6 @@ module.exports = {
     addProduct,
     updateProduct,
     deleteProduct,
-    getTopProducts
+    getTopProducts,
+    getProductByName
 };
