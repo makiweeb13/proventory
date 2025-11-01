@@ -1,13 +1,18 @@
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
-const getAllProducts = async (search) => {
+const getAllProducts = async (search, order='asc', skip, limit) => {
     const products = await prisma.products.findMany({
         orderBy: {
-            product_id: 'asc'
+            name: order
         },
         where: {
             name: { contains: search }
+        },
+        skip: skip,
+        take: limit,
+        include: {
+            categories: true
         }
     });
     return products;
@@ -77,6 +82,11 @@ const getTopProducts = async (limit = 10) => {
     `;
 };
 
+const getTotalProductsCount = async () => {
+    const count = await prisma.products.count();
+    return count;
+}
+
 module.exports = {
     getAllProducts,
     getProductById,
@@ -84,5 +94,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getTopProducts,
-    getProductByName
+    getProductByName,
+    getTotalProductsCount
 };

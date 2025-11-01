@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useStore from "../store/store";
 
-function Product({ product }) {
+function Product({ product, categories }) {
     const [form, setForm] = useState({
         id: product.product_id,
         name: product.name,
@@ -18,7 +18,7 @@ function Product({ product }) {
     };
 
     const API_URL = import.meta.env.VITE_API_URL;
-    const { setStatusMessage, deleteProduct, categories } = useStore();
+    const { setStatusMessage, deleteProduct } = useStore();
 
     const handleEdit = async () => {
         

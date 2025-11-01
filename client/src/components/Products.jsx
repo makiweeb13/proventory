@@ -6,7 +6,7 @@ import ManageProducts from "./ManageProducts";
 import Menu from "./Menu";
 
 function Products() {
-    const { setTitle, setCategories, setStatusMessage, search, setSearch } = useStore();
+    const { setTitle, categories, setCategories, setStatusMessage, search, setSearch } = useStore();
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -18,9 +18,9 @@ function Products() {
             const fetchCategories = async () => {
                 try {
                     const API_URL = import.meta.env.VITE_API_URL;
-                    const response = await fetch(`${API_URL}/category`, { credentials: 'include' });
+                    const response = await fetch(`${API_URL}/category?filter=all`, { credentials: 'include' });
                     const data = await response.json();
-                    setCategories(data);
+                    setCategories(data.categories);
                 } catch (error) {
                     console.error('Error fetching categories:', error);
                     setStatusMessage('Error fetching categories', 'error');
@@ -41,8 +41,8 @@ function Products() {
                 <Menu />  
             </div>
             <div className="side">
-                <AddProducts />
-                <ManageProducts />
+                <AddProducts categories={categories} />
+                <ManageProducts categories={categories} />
             </div>
         </>
     )

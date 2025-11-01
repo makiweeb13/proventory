@@ -24,9 +24,19 @@ const addProductController = async (req, res, next) => {
 
 const getAllProductsController = async (req, res, next) => {
     try {
-        const { search } = req.query;
-        const products = await productService.getAllProducts(search);
-        return res.json(products);
+        const { search, page, order, pageSize } = req.query;
+        let skip, limit;
+        if (!page || !pageSize) {
+            limit = 5;
+            skip = 0;
+        } else {
+            skip = (parseInt(page) - 1) * parseInt(pageSize);
+            limit = parseInt(pageSize);
+        }
+        const products = await productService.getAllProducts(search, order, skip, limit);
+        const totalProducts = await productService.getTotalProductsCount();
+        const totalPages = Math.ceil(totalProducts / limit);
+        res.json({ products, totalPages });
     } catch (error) {
         return next(error);
     }

@@ -2,9 +2,9 @@ import { useFormik } from "formik";
 import { productSchema } from "../schemas/product-schema";
 import useStore from "../store/store";
 
-function AddProducts() {
+function AddProducts({ categories }) {
 
-    const { setStatusMessage, addProduct, categories } = useStore();
+    const { setStatusMessage, addProduct } = useStore();
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -112,7 +112,7 @@ function AddProducts() {
                     required
                 >
                     <option value="">Select Category</option>
-                    {categories.map(category => (
+                    { categories.map(category => (
                         <option key={category.category_id} value={category.category_id}>
                             {category.name}
                         </option>

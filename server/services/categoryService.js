@@ -1,8 +1,9 @@
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
-const getAllCategories = async ( search, skip, limit, order ) => {
-    const categories = await prisma.categories.findMany({
+const getAllCategories = async ( search, skip, limit, order, filter ) => {
+
+    const categories = await prisma.categories.findMany(filter === 'all' ? {} : {
         orderBy: {
             name: order === 'desc' ? 'desc' : 'asc'
         },
