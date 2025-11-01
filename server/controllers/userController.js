@@ -72,6 +72,7 @@ const getUserController = async (req, res, next) => {
 const getAllUsersController = async (req, res, next) => {
     try {
         const { search, page, order, pageSize } = req.query;
+        let skip, limit;
         if (!page || !pageSize) {
             limit = 5;
             skip = 0;

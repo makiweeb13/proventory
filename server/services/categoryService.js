@@ -1,14 +1,16 @@
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
-const getAllCategories = async ( search ) => {
+const getAllCategories = async ( search, skip, limit, order ) => {
     const categories = await prisma.categories.findMany({
         orderBy: {
-            category_id: 'asc'
+            name: order === 'desc' ? 'desc' : 'asc'
         },
         where: {
             name: { contains: search }
-        }
+        },
+        skip: skip,
+        take: limit
     })
     return categories
 }
@@ -45,10 +47,16 @@ const deleteCategory = async ( id ) => {
     })
 }
 
+const getTotalCategoriesCount = async () => {
+    const count = await prisma.categories.count();
+    return count;
+}
+
 module.exports = {
     getAllCategories,
     getCategoryByName,
     addCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getTotalCategoriesCount
 }

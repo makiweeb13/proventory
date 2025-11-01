@@ -23,9 +23,19 @@ const addCategoryController = async (req, res, next) => {
 
 const getAllCategoriesController = async (req, res, next) => {
     try {
-        const { search } = req.query;
-        const categories = await categoryService.getAllCategories(search);
-        res.json(categories);
+        const { search, page, pageSize, order } = req.query;
+        let skip, limit;
+        if (!page || !pageSize) {
+            limit = 5;
+            skip = 0;
+        } else {
+            skip = (parseInt(page) - 1) * parseInt(pageSize);
+            limit = parseInt(pageSize);
+        }
+        const categories = await categoryService.getAllCategories(search, skip, limit, order);
+        const totalCategories = await categoryService.getTotalCategoriesCount();
+        const totalPages = Math.ceil(totalCategories / limit);
+        res.json({ categories, totalPages });
     } catch (error) {
         next(error)
     }

@@ -1,7 +1,8 @@
 import useStore from "../store/store";
+import { useEffect } from "react";
 
 function Menu() {
-    const { page, totalPages, pageSize, order, sortBy, setPage, setPageSize, setOrder, setSortBy } = useStore();
+    const { page, search, totalPages, pageSize, order, sortBy, setPage, setPageSize, setOrder, setSortBy } = useStore();
 
     const handleSortChange = (e) => {
         setSortBy(e.target.value);
@@ -18,7 +19,13 @@ function Menu() {
         setPage(1);
     };
 
-    console.log({ page, totalPages, pageSize, order, sortBy });
+    useEffect(() => {
+        setPage(1);
+        setOrder('asc');
+        setSortBy('alphabetical');
+        setPageSize(5);
+    }, [search, setOrder, setPage, setPageSize, setSortBy]);
+
     return (
         <div className="menu-container">
             <div className="menu-controls">

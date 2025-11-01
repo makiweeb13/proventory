@@ -4,16 +4,17 @@ import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 
 function ManageCategories() {
-    const { categories, statusMessage, statusType, setStatusMessage, setPage, page, pageSize, setCategories, search } = useStore();
+    const { categories, statusMessage, statusType, setStatusMessage, setTotalPages, page, order, pageSize, setCategories, search } = useStore();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const API_URL = import.meta.env.VITE_API_URL;
-                const response = await fetch(`${API_URL}/category?search=${search}`, { credentials: 'include' });
+                const response = await fetch(`${API_URL}/category?search=${search}&page=${page}&pageSize=${pageSize}&order=${order}`, { credentials: 'include' });
                 const data = await response.json();
-                setCategories(data);
+                setCategories(data.categories);
+                setTotalPages(data.totalPages);
             } catch (error) {
                 console.error('Error fetching categories:', error);
                 setStatusMessage('Error fetching categories', 'error');
@@ -21,7 +22,7 @@ function ManageCategories() {
         };
         fetchCategories();
         setLoading(false);
-    }, [search, setStatusMessage, setCategories]);
+    }, [search, setStatusMessage, setCategories, setTotalPages, page, order, pageSize]);
 
     if (loading) {
         return <div>Loading...</div>;
