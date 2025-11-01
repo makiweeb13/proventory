@@ -4,24 +4,25 @@ import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 
 function ManageUsers() {
-    const { users, statusMessage, statusType, setStatusMessage, setUsers, search } = useStore();
+    const { users, statusMessage, statusType, setStatusMessage, setTotalPages, setUsers, search, page, order, pageSize } = useStore();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const API_URL = import.meta.env.VITE_API_URL;
-                const response = await fetch(`${API_URL}/user?search=${search}`, { credentials: 'include' });
+                const response = await fetch(`${API_URL}/user?search=${search}&page=${page}&order=${order}&pageSize=${pageSize}`, { credentials: 'include' });
                 const data = await response.json();
-                setUsers(data);
+                setUsers(data.users);
+                setTotalPages(data.totalPages);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching users:', error);
                 setStatusMessage('Error fetching users', 'error');
             }
         };
         fetchUsers();
-        setLoading(false);
-    }, [search, setStatusMessage, setUsers]);
+    }, [search, setStatusMessage, setUsers, page, order, pageSize, setTotalPages]);
 
     if (loading) {
         return <div>Loading...</div>;

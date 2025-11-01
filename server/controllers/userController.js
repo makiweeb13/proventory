@@ -71,9 +71,18 @@ const getUserController = async (req, res, next) => {
 
 const getAllUsersController = async (req, res, next) => {
     try {
-        const { search } = req.query;
-        const users = await userService.getAllUsers(search);
-        res.json(users);
+        const { search, page, order, pageSize } = req.query;
+        if (!page || !pageSize) {
+            limit = 5;
+            skip = 0;
+        } else {
+            skip = (parseInt(page) - 1) * parseInt(pageSize);
+            limit = parseInt(pageSize);
+        }
+        const users = await userService.getAllUsers(search, order, skip, limit);
+        const totalUsers = await userService.getTotalUsersCount();
+        const totalPages = Math.ceil(totalUsers / limit);
+        res.json({ users, totalPages });
     } catch (error) {
         next(error);
     }

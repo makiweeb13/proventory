@@ -330,10 +330,11 @@ footer {
     margin: 0.5rem;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 1.2rem;
     color: #000;
-    width: fit-content;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    overflow-x: auto;
 }
 
 .user-field {
@@ -354,14 +355,13 @@ footer {
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
-    background: #f9f9f9;
+    background: none;
     color: #000;
 }
 
 .user-actions {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
     margin-top: 1rem;
 }
 
@@ -399,7 +399,8 @@ footer {
     border-radius: 18px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.07);
     color: #000;
-    width: fit-content;
+    width: 100%;
+    max-width: 900px;
 }
 
 .manage-users-title {
@@ -420,7 +421,7 @@ footer {
 .side {
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: space-between;
 }
 
 /* StatusMessage.css */
@@ -640,4 +641,106 @@ footer {
     grid-template-columns: auto auto;
     gap: 20px;
     margin: 2rem 0 2rem 0;
+}
+
+/* Menu.css */
+
+.menu-container {
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    max-width: 600px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.menu-controls {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.menu-controls label {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.menu-controls select {
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid #d0d0d0;
+    background: #f7f7f7;
+    color: #000;
+    font-size: 1rem;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 0.7rem;
+    transition: background 0.2s;
+    font-size: 1.08rem;
+}
+
+.menu-item:hover {
+    background: #e3f2fd;
+}
+
+.menu-item-name {
+    font-weight: 600;
+}
+
+.menu-item-date {
+    font-size: 0.98rem;
+    color: #4f8cff;
+    font-weight: 500;
+    margin-left: 1.2rem;
+    white-space: nowrap;
+}
+
+.menu-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    margin: 0 1rem;
+}
+
+.menu-pagination button {
+    background: #4f8cff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+
+.menu-pagination button:disabled {
+    background: #b3c7e6;
+    cursor: not-allowed;
+}
+
+.menu-pagination input {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 5px;
+    background: #f7f7f7;
+    color: #000;
+    border-radius: 5px;
 }

@@ -2,6 +2,7 @@ import useStore from "../store/store";
 import { useEffect } from "react";
 import SearchBar from "./SearchBar";
 import AddSales from "./AddSales";
+import Menu from "./Menu";
 
 function Sales() {
     const { setTitle, search, setSearch, setStatusMessage } = useStore();
@@ -13,8 +14,13 @@ function Sales() {
 
     return (
         <>
-            <SearchBar search={search} setSearch={setSearch} />
-            <AddSales />
+            <div className="side">
+                <SearchBar search={search} setSearch={setSearch} />
+                <Menu />
+            </div>
+            <div className="side">
+                <AddSales />
+            </div>
         </>
     )
 }

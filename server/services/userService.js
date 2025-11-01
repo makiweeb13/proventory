@@ -19,11 +19,13 @@ const getUserById = async ( id ) => {
     return user
 }
 
-const getAllUsers = async ( search ) => {
+const getAllUsers = async ( search, order = 'asc', skip, limit ) => {
     const users = await prisma.users.findMany({
         orderBy: {
-            user_id: 'asc'
+            name: order
         },
+        skip: skip,
+        take: limit,
         where: {
             OR: [
                 { name: { contains: search } },
@@ -77,6 +79,11 @@ const updateUserPassword = async ( id, hashedPassword ) => {
     })
 }
 
+const getTotalUsersCount = async ( ) => {
+    const count = await prisma.users.count();
+    return count
+}
+
 module.exports = {
     getUserByEmail,
     addUser,
@@ -84,5 +91,6 @@ module.exports = {
     deleteUser,
     getUserById,
     getAllUsers,
-    updateUserPassword
+    updateUserPassword,
+    getTotalUsersCount
 }

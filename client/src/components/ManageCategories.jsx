@@ -4,7 +4,7 @@ import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 
 function ManageCategories() {
-    const { categories, statusMessage, statusType, setStatusMessage, setCategories, search } = useStore();
+    const { categories, statusMessage, statusType, setStatusMessage, setPage, page, pageSize, setCategories, search } = useStore();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

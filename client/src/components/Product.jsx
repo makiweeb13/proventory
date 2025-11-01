@@ -70,7 +70,7 @@ function Product({ product }) {
     return (
         <div className="user-card">
             <div className="user-field">
-                <label>Product:</label>
+                <label>Product Name:</label>
                 <input
                     type="text"
                     name="name"
@@ -88,7 +88,7 @@ function Product({ product }) {
                     min={1}
                 />
             </div>
-            {/* <div className="user-field">
+            <div className="user-field">
                 <label>Buying Price (<span>&#8369;</span>):</label>
                 <input
                     type="number"
@@ -96,7 +96,7 @@ function Product({ product }) {
                     value={form.buying_price}
                     onChange={handleChange}
                 />
-            </div> */}
+            </div>
             <div className="user-field">
                 <label>Selling Price (<span>&#8369;</span>):</label>
                 <input

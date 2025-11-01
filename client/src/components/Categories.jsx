@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import SearchBar from "./SearchBar";
 import AddCategories from "./AddCategories";
 import ManageCategories from "./ManageCategories";
+import Menu from "./Menu";
 
 function Categories() {
     const { setTitle, search, setSearch, setStatusMessage } = useStore();
@@ -14,7 +15,10 @@ function Categories() {
 
     return (
         <>
-            <SearchBar search={search} setSearch={setSearch} />
+            <div className="side">
+                <SearchBar search={search} setSearch={setSearch} />
+                <Menu />
+            </div>
             <div className="side">
                 <AddCategories />
                 <ManageCategories />

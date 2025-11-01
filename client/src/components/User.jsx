@@ -14,7 +14,7 @@ function User({ user }) {
     };
 
     const API_URL = import.meta.env.VITE_API_URL;
-    const { setStatusMessage, deleteUser } = useStore();
+    const { setStatusMessage } = useStore();
 
     const handleEdit = async (form) => {
         try {
@@ -39,28 +39,28 @@ function User({ user }) {
         }
     }
 
-    const handleDelete = async () => {
-        try {
-            const confirmed = window.confirm(`Proceed to delete user with the id ${form.id}?`);
-            if (!confirmed) return;
+    // const handleDelete = async () => {
+    //     try {
+    //         const confirmed = window.confirm(`Proceed to delete user with the id ${form.id}?`);
+    //         if (!confirmed) return;
 
-            const response = await fetch(`${API_URL}/user/${form.id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
+    //         const response = await fetch(`${API_URL}/user/${form.id}`, {
+    //             method: 'DELETE',
+    //             credentials: 'include'
+    //         });
 
-            if (!response.ok) {
-                throw new Error('Failed to delete user');
-            }
+    //         if (!response.ok) {
+    //             throw new Error('Failed to delete user');
+    //         }
 
-            const data = await response.json();
-            setStatusMessage(data.message);
-            deleteUser(form.id);
-        } catch (error) {
-            console.error(error);
-            setStatusMessage('Error deleting user', 'error');
-        }
-    }
+    //         const data = await response.json();
+    //         setStatusMessage(data.message);
+    //         deleteUser(form.id);
+    //     } catch (error) {
+    //         console.error(error);
+    //         setStatusMessage('Error deleting user', 'error');
+    //     }
+    // }
 
     return (
         <div className="user-card">
@@ -88,11 +88,11 @@ function User({ user }) {
             </div>
             <div className="user-field">
                 <label>Role:</label>
-                <p className="capitalize">{user.role}</p>
+                <p className="capitalize">{user.role === 'user' ? 'Staff' : user.role}</p>
             </div>
             <div className="user-actions">
                 <button className="edit-btn" onClick={() => handleEdit(form)}>Edit</button>
-                { user.role === 'user' && <button className="delete-btn" onClick={() => handleDelete(form.id)}>Delete</button> }
+                {/* { user.role === 'user' && <button className="delete-btn" onClick={() => handleDelete(form.id)}>Delete</button> } */}
             </div>
         </div>
     );

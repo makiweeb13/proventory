@@ -96,7 +96,7 @@ function AddUsers() {
                     onBlur={handleBlur}
                     required
                 >
-                    <option value="user">User</option>
+                    <option value="user">Staff</option>
                     <option value="admin">Admin</option>
                 </select>
             </div>

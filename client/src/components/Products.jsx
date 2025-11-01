@@ -2,7 +2,8 @@ import useStore from "../store/store";
 import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import AddProducts from "./AddProducts";
-import ManageProducts from "./ManageProducts"
+import ManageProducts from "./ManageProducts";
+import Menu from "./Menu";
 
 function Products() {
     const { setTitle, setCategories, setStatusMessage, search, setSearch } = useStore();
@@ -35,7 +36,10 @@ function Products() {
 
     return (
         <>
-            <SearchBar search={search} setSearch={setSearch} />   
+            <div className="side">
+                <SearchBar search={search} setSearch={setSearch} /> 
+                <Menu />  
+            </div>
             <div className="side">
                 <AddProducts />
                 <ManageProducts />

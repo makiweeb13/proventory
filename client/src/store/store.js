@@ -9,6 +9,16 @@ const useStore = create((set, get) => ({
     search: '',
     categories: [],
     products: [],
+    page: 1,
+    totalPages: 1,
+    pageSize: 5,
+    order: 'asc', // 'asc' or 'desc'
+    sortBy: 'alphabetical', // 'alphabetical' or 'date'
+    setPage: (page) => set({ page }),
+    setTotalPages: (totalPages) => set({ totalPages }),
+    setPageSize: (pageSize) => set({ pageSize }),  
+    setOrder: (order) => set({ order }),
+    setSortBy: (sortBy) => set({ sortBy }),
     setStatusMessage: (message, type = 'success') => set({ statusMessage: message, statusType: type }),
     setUser: (user) => set({ user }),
     setTitle: (title) => set({ title }),
