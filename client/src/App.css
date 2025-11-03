@@ -744,3 +744,48 @@ footer {
     color: #000;
     border-radius: 5px;
 }
+
+.transactions-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.transactions-container h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.transactions-table th {
+    background: #f7f7f7;
+    font-weight: 600;
+    color: #444;
+}
+
+.transactions-table tr:hover {
+    background: #f9f9f9;
+}
+
+.transactions-table td {
+    color: #555;
+}

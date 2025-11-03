@@ -79,8 +79,15 @@ const updateUserPassword = async ( id, hashedPassword ) => {
     })
 }
 
-const getTotalUsersCount = async ( ) => {
-    const count = await prisma.users.count();
+const getTotalUsersCount = async ( search ) => {
+    const count = await prisma.users.count({
+        where: {
+            OR: [
+                { name: { contains: search } },
+                { email: { contains: search } }
+            ]
+        }
+    });
     return count
 }
 

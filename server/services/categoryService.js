@@ -48,8 +48,12 @@ const deleteCategory = async ( id ) => {
     })
 }
 
-const getTotalCategoriesCount = async () => {
-    const count = await prisma.categories.count();
+const getTotalCategoriesCount = async ( search ) => {
+    const count = await prisma.categories.count({
+        where: {
+            name: { contains: search }
+        }
+    });
     return count;
 }
 

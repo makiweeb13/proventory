@@ -32,12 +32,12 @@ A web-based inventory management system built with React, Node.js, and MySQL.
   
 ![Products Page](./screenshots/products.png)
 
-### 4. Sales Management (Ongoing)
+### 4. Sales Management
 - Record sales transactions
 - Track sales history
-- Generate sales reports (daily, weekly, yearly)
+- Search filtering and pagination
 
-<!-- ![Sales Page]() -->
+![Sales Page](./screenshots/transactions.png)
 
 ### 5. User Management (Admin Only)
 - Create and manage user accounts

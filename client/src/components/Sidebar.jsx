@@ -34,6 +34,9 @@ function Sidebar() {
                 <NavLink to="/sales" className="sidebar-link">
                     Sales
                 </NavLink>
+                <NavLink to="/transactions" className="sidebar-link">
+                    Transactions
+                </NavLink>
             </nav>
         </aside>
     )

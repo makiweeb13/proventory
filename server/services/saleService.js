@@ -80,7 +80,40 @@ const getAllSales = async (period = 'daily') => {
     return sales;
 }
 
+const getAllTransactions = async (search, skip, limit, order = 'desc') => {
+    const transactions = await prisma.sales.findMany({
+        orderBy: { sale_date: order },
+        where: {
+            OR: [
+               { products: { name: { contains: search } } },
+               { users: { name: { contains: search } } }
+            ]
+        },
+        include: {
+            products: true,
+            users: true
+        },
+        skip: skip,
+        take: limit
+    });
+    return transactions;
+}
+
+const getTotalSaleCount = async (search) => {
+    const count = await prisma.sales.count({
+        where: {
+            OR: [
+                { products: { name: { contains: search } } },
+                { users: { name: { contains: search } } }
+            ]
+        }
+    });
+    return count;
+}
+
 module.exports = {
     addSale,
-    getAllSales
+    getAllSales,
+    getAllTransactions,
+    getTotalSaleCount
 }

@@ -11,6 +11,7 @@ import Users from './components/Users';
 import Sales from './components/Sales';
 import Profile from './components/Profile';
 import ForgotPassword from './components/ForgotPassword';
+import Transactions from './components/Transactions';
 import './App.css'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             </Route>
             <Route path="/sales" element={<Sales />} />
             <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/transactions" element={<Transactions />} />
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />

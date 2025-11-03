@@ -82,8 +82,12 @@ const getTopProducts = async (limit = 10) => {
     `;
 };
 
-const getTotalProductsCount = async () => {
-    const count = await prisma.products.count();
+const getTotalProductsCount = async ( search ) => {
+    const count = await prisma.products.count({
+        where: {
+            name: { contains: search }
+        }
+    });
     return count;
 }
 

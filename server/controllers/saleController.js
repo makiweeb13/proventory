@@ -41,8 +41,29 @@ const convertBigInt = (obj) => {
     return obj;
 }
 
+const getAllTransactionsController = async (req, res, next) => {
+    const { search, page, order, pageSize } = req.query;
+    let skip, limit;
+    if (!page || !pageSize) {
+        limit = 5;
+    } else {
+        skip = (parseInt(page) - 1) * parseInt(pageSize);
+        limit = parseInt(pageSize);
+    }
+    try {
+        const transactions = await saleService.getAllTransactions(search, skip, limit, order);
+        const totalTransactions = await saleService.getTotalSaleCount(search);
+        const totalPages = Math.ceil(totalTransactions / limit);
+        const safeTransactions = convertBigInt(transactions);
+        res.json({ transactions: safeTransactions, totalPages });
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     addSaleController,
     getAllSalesController,
-    convertBigInt
+    convertBigInt,
+    getAllTransactionsController
 }
