@@ -8,6 +8,8 @@ const getStatsController = async (req, res, next) => {
         const totalProducts = await statService.getTotalProducts();
         const totalStock = await statService.getTotalStock();
         const totalSalesByUser = req.user ? await statService.getTotalSalesByUser(req.user.id) : 0;
+        const lowStockCount = await statService.getLowStockCount();
+        const inventoryValue = await statService.getTotalInventoryValue();
 
         res.status(200).json({
             statistics: [
@@ -15,7 +17,9 @@ const getStatsController = async (req, res, next) => {
                 { label: 'Total Products', value: totalProducts },
                 { label: 'Total Stock', value: totalStock },
                 { label: 'Total Sales', value: totalSales },
-                { label: 'Total Sales by User', value: totalSalesByUser }
+                { label: 'Total Sales by User', value: totalSalesByUser },
+                { label: 'Low Stock Items', value: lowStockCount },
+                { label: 'Total Inventory Value', value: inventoryValue }
             ]
         });
     } catch (error) {

@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { categorySchema } from "../schemas/category-schema";
 import useStore from "../store/store";
 
-function AddCategories() {
+function AddCategories({ onSuccess }) {
 
     const { setStatusMessage, addCategory } = useStore();
 
@@ -25,6 +25,7 @@ function AddCategories() {
                 setSubmitting(false);
                 setStatusMessage(data.message);
                 addCategory(data.category);
+                if (onSuccess) onSuccess();
             } else {
                 setStatusMessage(`Adding category failed: ${data.message}`, "error");
             }

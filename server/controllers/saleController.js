@@ -42,7 +42,8 @@ const convertBigInt = (obj) => {
 }
 
 const getAllTransactionsController = async (req, res, next) => {
-    const { search, page, order, pageSize } = req.query;
+    const { search: rawSearch, page, order, pageSize } = req.query;
+    const search = rawSearch || '';
     let skip, limit;
     if (!page || !pageSize) {
         limit = 5;

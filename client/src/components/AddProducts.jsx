@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { productSchema } from "../schemas/product-schema";
 import useStore from "../store/store";
 
-function AddProducts({ categories }) {
+function AddProducts({ categories, onSuccess }) {
 
     const { setStatusMessage, addProduct } = useStore();
 
@@ -23,6 +23,7 @@ function AddProducts({ categories }) {
                 setSubmitting(false);
                 setStatusMessage(data.message);
                 addProduct(data.product);
+                if (onSuccess) onSuccess();
             } else {
                 setStatusMessage(data.message, "error");
             }

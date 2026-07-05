@@ -1,5 +1,8 @@
 const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
+
+const globalForPrisma = globalThis;
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 const getAllProducts = async (search, order='asc', skip, limit) => {
     const products = await prisma.products.findMany({

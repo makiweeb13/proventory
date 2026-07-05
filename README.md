@@ -1,144 +1,156 @@
 # Proventory - Inventory Management System
 
-A web-based inventory management system built with React, Node.js, and MySQL.
+A web-based inventory management system built with React, Node.js, and TiDB (MySQL-compatible).
 
 ## Features
 
 ### 1. User Authentication
-- Secure login system with role-based access control
-- Admin and staff user roles
-- Input validation using formik and yup.
-- Password hashing with bcrypt.
-- JWT stored in an HTTP-only cookie for session.
-- Logout clears the cookie.
-- Prototype "forgot password" flow
-  
-![Login Page](./screenshots/login.png)
+- Secure login system with role-based access control (admin and staff)
+- Input validation using Formik and Yup
+- Password hashing with bcrypt
+- JWT stored in an HTTP-only cookie
+- Forgot password flow
+- Demo credentials always visible on login for testing
 
 ### 2. Dashboard
-- Overview of key metrics
-- Sales statistics and charts
+- Overview of key inventory metrics (total products, stock, sales, low stock items, inventory value)
+- Sales statistics with daily/weekly/monthly/yearly chart
 - Top selling products leaderboard
-  
-![Dashboard](./screenshots/dashboard.png)
+- Printable report view
 
 ### 3. Product Management
 - Add, edit, and delete products
-- Input validation using formik and yup.
 - Categorize products
-- Track stock levels
+- Track stock levels (stock can reach 0 without deletion)
 - Price management (buying and selling prices)
-- Pagination and filtering implemented
-  
-![Products Page](./screenshots/products.png)
+- Buying price visible only to admins
+- Search, filtering, and pagination
 
 ### 4. Sales Management
-- Record sales transactions
-- Track sales history
-- Search filtering and pagination
+- Record sales transactions with quantity selection
+- Automatic stock decrement on sale
+- Oversell protection (prevents selling more than available stock)
+- Out-of-stock products clearly indicated
+- Sales history view with search and pagination
+- Export transactions to CSV
 
-![Sales Page](./screenshots/transactions.png)
+### 5. Sales Reports
+- Daily, weekly, monthly, and yearly sales aggregation
+- Visual chart on the dashboard
+- Period selector for different granularity
 
-### 5. User Management (Admin Only)
-- Create and manage user accounts
-- Input validation using formik and yup.
-- Assign user roles
-- Update user profiles
-- Flagging users feature (ongoing)
-  
-![Users Page](./screenshots/users.png)
-
-### 6. Profile Page
-- Simple user profile view that displays the logged-in user's details (name, email, role).
-- Includes a prominent "Logout" button which clears the HTTP-only JWT cookie and redirects to the login page.
-  
-![Profile Page](./screenshots/profile.png)
+### 6. User Management (Admin Only)
+- Create user accounts via modal form
+- Assign user roles (admin or staff)
+- Edit user name, email, role, and account status
+- Account statuses: active, inactive, suspended, deleted
+- Soft deletes — deactivated users cannot log in but data is preserved
+- Status filter dropdown (All / Active / Inactive / Suspended / Deleted)
+- Admins cannot change their own role (prevents accidental lockout)
 
 ### 7. Categories Management
-- Full CRUD for categories: create, read, update, delete.
-- Validation on inputs (name required, max length).
-- Categories list supports pagination and simple search/filtering.
-- Used by Products to assign category IDs.
-  
-![Categories Page](./screenshots/categories.png)
+- Full CRUD: create, read, update, delete
+- Input validation (name required, max length)
+- Pagination and search filtering
+- Categories linked to products
 
-### 8. Sales Entry & History
-- Users can add a sale (select product, enter quantity, confirm sale).
-- Backend reduces product stock automatically and records sale details.
-- Sales history view with pagination, filters (by user, date range), and export-ready data.
-- Sales reports (daily/weekly/monthly/yearly) available on Dashboard.
-  
-![Sales Page](./screenshots/sales.png)
+### 8. Profile Page
+- Displays logged-in user's details (name, email, role, account status)
+- Logout button clears the JWT cookie and redirects to login
+
+### 9. Seed System
+- Idempotent seed route creates sample data: admin user, staff user, categories, products, and sales
+- Auto-detects authentication — if no admin exists, seed is accessible without auth
+- Seed passwords pass all validation rules
 
 ## Installation
 
 1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/proventory.git
+cd proventory
 ```
 
-2. Install dependencies
+2. Install dependencies (single root install via npm workspaces)
 ```bash
-# Install backend dependencies
-cd server
-npm install
-
-# Install frontend dependencies
-cd ../client
 npm install
 ```
 
 3. Set up the database
 ```bash
-# In the server directory
+cd server
 npx prisma generate
 npx prisma db push
 ```
 
-4. Create `.env` file in the server directory
+4. Create `.env` file in the `server/` directory
 ```env
-DATABASE_URL="mysql://username:password@localhost:3306/proventory"
+DATABASE_URL="mysql://user:password@host:4000/proventory?sslaccept=strict&foreign_key_checks=1"
+JWT_SECRET="your-secret-key"
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+NODE_ENV=development
 ```
 
-5. Start the application
+5. Start the application (runs both API and client)
 ```bash
-# Start backend (in server directory)
-npm start
-
-# Start frontend (in client directory)
+cd ..
 npm run dev
 ```
 
+The API runs on port 5000 and the client on port 5173 with a Vite proxy forwarding `/api` requests to the backend.
+
+## Seed Data
+
+To populate the database with sample data, send a POST request to `/api/seed`:
+
+```bash
+curl -X POST http://localhost:5000/api/seed
+```
+
+Credentials:
+- Admin: `admin@proventory.com` / `abcDEF123#`
+- Staff: `staff@proventory.com` / `abcDEF123#`
+
 ## Technologies Used
 
-- Frontend:
-  - React
-  - Zustand (State Management)
-  - Chart.js
-  - React Router
+### Frontend
+- React 19
+- Zustand (state management)
+- Chart.js + react-chartjs-2
+- React Router DOM
+- Formik + Yup (form validation)
 
-- Backend:
-  - Node.js
-  - Express
-  - Prisma ORM
-  - MySQL
+### Backend
+- Node.js + Express
+- Prisma ORM
+- TiDB (MySQL-compatible cloud database)
+- bcryptjs
+- JSON Web Tokens
+
+### Infrastructure
+- npm workspaces (monorepo)
+- Vite (build tool)
+- Vercel-ready deployment
 
 ## Project Structure
 
 ```
 proventory/
+├── api/                    # Vercel serverless entry point
+│   └── index.js           # Mounts all routes at /api
 ├── client/                 # Frontend React application
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── store/        # Zustand store
-│   │   └── util/         # Utility functions
-│   └── package.json
-│
-├── server/                # Backend Node.js application
+│   └── src/
+│       ├── components/    # React components
+│       ├── store/         # Zustand store
+│       ├── schemas/       # Yup validation schemas
+│       └── App.css        # Global styles (dark theme)
+├── server/                 # Backend Node.js application
 │   ├── controllers/      # Route controllers
-│   ├── services/        # Business logic
-│   ├── prisma/         # Database schema and migrations
-│   └── package.json
-│
+│   ├── services/         # Business logic with Prisma singleton
+│   ├── routes/           # Express route definitions
+│   ├── middleware/       # Auth and error handling
+│   └── prisma/          # Schema and generated client
+├── package.json           # Root workspace config
 └── README.md
 ```

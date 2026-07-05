@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -9,12 +10,13 @@ datasource db {
 }
 
 model users {
-  user_id  Int        @id @default(autoincrement())
-  name     String     @db.VarChar(255)
-  email    String     @unique(map: "email_UNIQUE") @db.VarChar(255)
-  password String     @db.VarChar(255)
-  role     users_role
-  sales    sales[]
+  user_id        Int                  @id @default(autoincrement())
+  name           String               @db.VarChar(255)
+  email          String               @unique(map: "email_UNIQUE") @db.VarChar(255)
+  password       String               @db.VarChar(255)
+  role           users_role
+  account_status users_account_status @default(active)
+  sales          sales[]
 }
 
 model categories {
@@ -53,4 +55,11 @@ model sales {
 enum users_role {
   user
   admin
+}
+
+enum users_account_status {
+  active
+  inactive
+  suspended
+  deleted
 }

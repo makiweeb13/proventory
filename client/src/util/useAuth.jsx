@@ -25,6 +25,7 @@ const useAuth = () => {
                     typeof data.email === 'string' &&
                     typeof data.role === 'string'
                 ) {
+                    if (!data.account_status) data.account_status = 'active';
                     setIsAuthenticated(true);
                     setUser(data);
                 } else {

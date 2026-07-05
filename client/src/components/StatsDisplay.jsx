@@ -4,6 +4,7 @@ import Stat from "./Stat";
 function StatsDisplay() {
 
     const [stats, setStats] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -16,21 +17,35 @@ function StatsDisplay() {
                 setStats(fetchedStats.statistics);
             } catch (error) {
                 console.error("Error fetching stats:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchStats();
     }, []);
 
+    const DASHBOARD_LABELS = [
+        'Total Products', 'Total Stock', 'Total Sales',
+        'Low Stock Items', 'Total Inventory Value'
+    ];
+
+    if (loading) {
+        return <div className="dashboard-loading">Loading statistics...</div>;
+    }
+
     if (stats.length === 0) {
-        return <h1>Loading statistics...</h1>;
+        return <div className="dashboard-loading">No statistics available</div>;
     }
 
     return (
         <div className="stats-display">
-            {stats.map((stat, index) => (
-                <Stat key={index} value={stat.value} label={stat.label} />
-            ))}
+            {stats
+                .filter(stat => DASHBOARD_LABELS.includes(stat.label))
+                .map((stat, index) => (
+                    <Stat key={index} value={stat.value} label={stat.label} />
+                ))
+            }
         </div>
     );
 }

@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { userSchema } from "../schemas/register-schema";
 import useStore from "../store/store";
 
-function AddUsers() {
+function AddUsers({ onSuccess }) {
 
     const { setStatusMessage, addUser } = useStore();
 
@@ -23,6 +23,7 @@ function AddUsers() {
                 setSubmitting(false);
                 setStatusMessage(data.message);
                 addUser(data.user);
+                if (onSuccess) onSuccess();
             } else {
                 setStatusMessage(`Registration failed: ${data.message}`, "error");
             }

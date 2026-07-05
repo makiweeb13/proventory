@@ -2,16 +2,17 @@ import { NavLink } from "react-router-dom";
 import useStore from "../store/store";
 import proventoryLogo from "../assets/proventory-logo.png"; // Assuming you have a logo image
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
     const { user } = useStore();
 
     return ( 
-        <aside className="sidebar">
+        <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+            <button className="sidebar-close" onClick={onClose} aria-label="Close menu">&times;</button>
             <div className="sidebar-header">
                 <img src={proventoryLogo} alt="Proventory Logo" />
                 <h1 className="sidebar-title">Proventory</h1>
             </div>
-            <nav className="sidebar-nav">
+            <nav className="sidebar-nav" onClick={onClose}>
                 <NavLink to="/" className="sidebar-link">
                     Dashboard
                 </NavLink>

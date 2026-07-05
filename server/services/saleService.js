@@ -1,5 +1,8 @@
 const { PrismaClient, Decimal } = require('../generated/prisma');
-const prisma = new PrismaClient();
+
+const globalForPrisma = globalThis;
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 
 const addSale = async (product_id, user_id, quantity, selling_price) => {
@@ -14,7 +17,7 @@ const addSale = async (product_id, user_id, quantity, selling_price) => {
         }
     });
 
-    const product = await prisma.products.update({
+    await prisma.products.update({
         where : {
             product_id: parseInt(product_id)
         },
@@ -24,14 +27,6 @@ const addSale = async (product_id, user_id, quantity, selling_price) => {
             }
         }
     });
-
-    if (product.stock < 1) {
-        await prisma.products.delete({
-            where: {
-                product_id: parseInt(product_id)
-            }
-        });
-    }
 
     return sale;
 }

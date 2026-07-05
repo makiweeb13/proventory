@@ -1,5 +1,5 @@
-import useStore from "../store/store";
 import { useState, useEffect } from "react";
+import useStore from "../store/store";
 import SearchBar from "./SearchBar";
 import AddProducts from "./AddProducts";
 import ManageProducts from "./ManageProducts";
@@ -7,7 +7,8 @@ import Menu from "./Menu";
 
 function Products() {
     const { setTitle, categories, setCategories, setStatusMessage, search, setSearch } = useStore();
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
+    const [showAddProduct, setShowAddProduct] = useState(false);
 
     useEffect(() => {
         setTitle('Products');
@@ -24,26 +25,33 @@ function Products() {
                 } catch (error) {
                     console.error('Error fetching categories:', error);
                     setStatusMessage('Error fetching categories', 'error');
+                } finally {
+                    setLoading(false);
                 }
             };
             fetchCategories();
-            setLoading(false);
     }, [setCategories, setStatusMessage]);
 
     if (loading) {
-        return <h1>Loading..</h1>
-    } 
+        return <div className="dashboard-loading">Loading...</div>;
+    }
 
     return (
         <>
-            <div className="side">
-                <SearchBar search={search} setSearch={setSearch} /> 
-                <Menu />  
+            <div className="users-controls">
+                <SearchBar search={search} setSearch={setSearch} />
+                <button className="add-user-btn" onClick={() => setShowAddProduct(true)}>Add Product</button>
             </div>
-            <div className="side">
-                <AddProducts categories={categories} />
-                <ManageProducts categories={categories} />
-            </div>
+            <Menu />
+            <ManageProducts categories={categories} />
+            {showAddProduct && (
+                <div className="modal-overlay" onClick={() => setShowAddProduct(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close-btn" onClick={() => setShowAddProduct(false)}>X</button>
+                        <AddProducts categories={categories} onSuccess={() => setShowAddProduct(false)} />
+                    </div>
+                </div>
+            )}
         </>
     )
 }

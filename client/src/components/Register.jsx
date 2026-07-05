@@ -36,7 +36,7 @@ function Register() {
     })
 
     return (
-        <div className="page">
+        <div className="auth-page">
             <h2>Proventory</h2>
             <form onSubmit={handleSubmit} >
                 <label htmlFor="username">Username</label>

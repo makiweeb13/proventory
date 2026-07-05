@@ -1,5 +1,8 @@
 const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
+
+const globalForPrisma = globalThis;
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 const getTotalSales = async () => {
     const totalSales = await prisma.sales.aggregate({
@@ -11,7 +14,11 @@ const getTotalSales = async () => {
 }
 
 const getTotalUsers = async () => {
-    const totalUsers = await prisma.users.count();
+    const totalUsers = await prisma.users.count({
+        where: {
+            account_status: { not: 'deleted' }
+        }
+    });
     return totalUsers;
 }
 
@@ -41,10 +48,25 @@ const getTotalSalesByUser = async (userId) => {
     return totalSales._sum.amount || 0;
 }
 
+const getLowStockCount = async (threshold = 5) => {
+    return await prisma.products.count({
+        where: { stock: { lte: threshold } }
+    });
+}
+
+const getTotalInventoryValue = async () => {
+    const products = await prisma.products.findMany({
+        select: { stock: true, buying_price: true }
+    });
+    return products.reduce((total, p) => total + (p.stock * Number(p.buying_price)), 0);
+}
+
 module.exports = {
     getTotalSales,
     getTotalUsers,
     getTotalProducts,
     getTotalStock,
-    getTotalSalesByUser
+    getTotalSalesByUser,
+    getLowStockCount,
+    getTotalInventoryValue
 };

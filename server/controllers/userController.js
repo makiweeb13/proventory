@@ -36,13 +36,21 @@ const loginController = async (req, res, next) => {
             throw new ThrowError(404, 'User not found');
         }
 
+        if (findUser.account_status === 'deleted') {
+            throw new ThrowError(403, 'Account has been deactivated');
+        }
+
+        if (findUser.account_status === 'suspended') {
+            throw new ThrowError(403, 'Account is suspended');
+        }
+
         const passwordMatched = await bcrypt.compare(password, findUser.password);
 
         if (!passwordMatched) {
             throw new ThrowError(400, 'Password mismatch')
         }
 
-        const token = jwt.sign({ id: findUser.user_id, name: findUser.name, email: findUser.email, role: findUser.role }, SECRET_KEY, { expiresIn: '1h'})
+        const token = jwt.sign({ id: findUser.user_id, name: findUser.name, email: findUser.email, role: findUser.role, account_status: findUser.account_status }, SECRET_KEY, { expiresIn: '1h'})
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000, sameSite: 'Strict' })
         res.status(200).json({ message: 'Login successful' })
 
@@ -52,8 +60,8 @@ const loginController = async (req, res, next) => {
 }
 
 const getCurrentUser = async (req, res) => {
-    const { id, name, email, role } = req.user
-    res.json({ id, name, email, role })
+    const { id, name, email, role, account_status } = req.user
+    res.json({ id, name, email, role, account_status })
 }
 
 const getUserController = async (req, res, next) => {
@@ -71,7 +79,9 @@ const getUserController = async (req, res, next) => {
 
 const getAllUsersController = async (req, res, next) => {
     try {
-        const { search, page, order, pageSize } = req.query;
+        const { search: rawSearch, page, order, pageSize, showDeleted } = req.query;
+        const search = rawSearch || '';
+        const showDel = showDeleted === 'true';
         let skip, limit;
         if (!page || !pageSize) {
             limit = 5;
@@ -80,8 +90,8 @@ const getAllUsersController = async (req, res, next) => {
             skip = (parseInt(page) - 1) * parseInt(pageSize);
             limit = parseInt(pageSize);
         }
-        const users = await userService.getAllUsers(search, order, skip, limit);
-        const totalUsers = await userService.getTotalUsersCount();
+        const users = await userService.getAllUsers(search, order, skip, limit, showDel);
+        const totalUsers = await userService.getTotalUsersCount(search, showDel);
         const totalPages = Math.ceil(totalUsers / limit);
         res.json({ users, totalPages });
     } catch (error) {
@@ -98,14 +108,18 @@ const logoutController = (req, res) => {
 
 const updateUserController = async (req, res, next) => {
     const { id } = req.params;
-    const { name, email } = req.body;
-
-    if (!name || !email ) {
-        throw new ThrowError(400, 'All fields are required');
-    }
+    const { name, email, role, account_status } = req.body;
 
     try {
-        await userService.updateUser(id, name, email );
+        if (role !== undefined && parseInt(req.user.id) === parseInt(id)) {
+            throw new ThrowError(403, 'Cannot change your own role');
+        }
+        if (name || email || role) {
+            await userService.updateUser(id, name, email, role);
+        }
+        if (account_status) {
+            await userService.updateUserStatus(id, account_status);
+        }
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
         next(error);
@@ -117,7 +131,7 @@ const deleteUserController = async (req, res, next) => {
 
     try {
         await userService.deleteUser(id);
-        res.status(200).json({ message: 'User deleted successfully' });
+        res.status(200).json({ message: 'User deactivated successfully' });
     } catch (error) {
         next(error);
     }

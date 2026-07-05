@@ -1,5 +1,8 @@
 const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
+
+const globalForPrisma = globalThis;
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 const getUserByEmail = async ( email ) => {
     const user = await prisma.users.findUnique({
@@ -19,19 +22,23 @@ const getUserById = async ( id ) => {
     return user
 }
 
-const getAllUsers = async ( search, order = 'asc', skip, limit ) => {
+const getAllUsers = async ( search, order = 'asc', skip, limit, showDeleted = false ) => {
+    const where = {
+        OR: [
+            { name: { contains: search } },
+            { email: { contains: search } }
+        ]
+    };
+    if (!showDeleted) {
+        where.account_status = { not: 'deleted' };
+    }
     const users = await prisma.users.findMany({
         orderBy: {
             name: order
         },
         skip: skip,
         take: limit,
-        where: {
-            OR: [
-                { name: { contains: search } },
-                { email: { contains: search } }
-            ]
-        }
+        where
     })
     return users
 }
@@ -48,22 +55,37 @@ const addUser = async( name, email, hashedPassword, role ) => {
     return user
 }
 
-const updateUser = async ( id, name, email ) => {
+const updateUser = async ( id, name, email, role ) => {
+    const data = {};
+    if (name !== undefined) data.name = name;
+    if (email !== undefined) data.email = email;
+    if (role !== undefined) data.role = role;
+    await prisma.users.update({
+        where: {
+            user_id: parseInt(id)
+        },
+        data
+    })
+}
+
+const deleteUser = async ( id ) => {
     await prisma.users.update({
         where: {
             user_id: parseInt(id)
         },
         data: {
-            name,
-            email
+            account_status: 'deleted'
         }
     })
 }
 
-const deleteUser = async ( id ) => {
-    await prisma.users.delete({
+const updateUserStatus = async ( id, status ) => {
+    await prisma.users.update({
         where: {
             user_id: parseInt(id)
+        },
+        data: {
+            account_status: status
         }
     })
 }
@@ -79,15 +101,17 @@ const updateUserPassword = async ( id, hashedPassword ) => {
     })
 }
 
-const getTotalUsersCount = async ( search ) => {
-    const count = await prisma.users.count({
-        where: {
-            OR: [
-                { name: { contains: search } },
-                { email: { contains: search } }
-            ]
-        }
-    });
+const getTotalUsersCount = async ( search, showDeleted = false ) => {
+    const where = {
+        OR: [
+            { name: { contains: search } },
+            { email: { contains: search } }
+        ]
+    };
+    if (!showDeleted) {
+        where.account_status = { not: 'deleted' };
+    }
+    const count = await prisma.users.count({ where });
     return count
 }
 
@@ -99,5 +123,6 @@ module.exports = {
     getUserById,
     getAllUsers,
     updateUserPassword,
-    getTotalUsersCount
+    getTotalUsersCount,
+    updateUserStatus
 }
