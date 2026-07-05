@@ -79,7 +79,8 @@ const getUserController = async (req, res, next) => {
 
 const getAllUsersController = async (req, res, next) => {
     try {
-        const { search, page, order, pageSize, showDeleted } = req.query;
+        const { search: rawSearch, page, order, pageSize, showDeleted } = req.query;
+        const search = rawSearch || '';
         const showDel = showDeleted === 'true';
         let skip, limit;
         if (!page || !pageSize) {
