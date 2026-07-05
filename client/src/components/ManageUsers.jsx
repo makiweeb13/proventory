@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
+import Pagination from './Pagination';
 
 const STATUS_COLORS = {
     active: '#16a34a',
@@ -9,20 +10,21 @@ const STATUS_COLORS = {
     deleted: '#dc2626'
 };
 
-function ManageUsers() {
+function ManageUsers({ statusFilter }) {
     const { users, statusMessage, statusType, setStatusMessage, setTotalPages,
             setUsers, search, page, order, pageSize, user: currentUser, updateUser } = useStore();
     const [loading, setLoading] = useState(true);
-    const [showDeleted, setShowDeleted] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [form, setForm] = useState({ name: '', email: '' });
     const [editStatus, setEditStatus] = useState('active');
+    const [editRole, setEditRole] = useState('user');
     const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
             try {
-                const response = await fetch(`${API_URL}/user?search=${search}&page=${page}&order=${order}&pageSize=${pageSize}&showDeleted=${showDeleted}`, { credentials: 'include' });
+                const response = await fetch(`${API_URL}/user?search=${search}&page=${page}&order=${order}&pageSize=${pageSize}&showDeleted=${statusFilter === 'deleted' || statusFilter === 'all'}`, { credentials: 'include' });
                 const data = await response.json();
                 setUsers(data.users);
                 setTotalPages(data.totalPages);
@@ -30,21 +32,24 @@ function ManageUsers() {
             } catch (error) {
                 console.error('Error fetching users:', error);
                 setStatusMessage('Error fetching users', 'error');
+                setLoading(false);
             }
         };
         fetchUsers();
-    }, [search, setStatusMessage, setUsers, page, order, pageSize, showDeleted, setTotalPages, API_URL]);
+    }, [search, setStatusMessage, setUsers, page, order, pageSize, statusFilter, setTotalPages, API_URL]);
 
     const startEdit = (user) => {
         setEditingId(user.user_id);
         setForm({ name: user.name, email: user.email });
         setEditStatus(user.account_status || 'active');
+        setEditRole(user.role || 'user');
     };
 
     const cancelEdit = () => {
         setEditingId(null);
         setForm({ name: '', email: '' });
         setEditStatus('active');
+        setEditRole('user');
     };
 
     const handleChange = (e) => {
@@ -53,10 +58,14 @@ function ManageUsers() {
     };
 
     const handleEdit = async () => {
+        const editingUser = users.find(u => u.user_id === editingId);
         try {
             const payload = { ...form };
-            if (editStatus !== user.account_status) {
+            if (editingUser && editStatus !== editingUser.account_status) {
                 payload.account_status = editStatus;
+            }
+            if (editingUser && editRole !== editingUser.role) {
+                payload.role = editRole;
             }
             const response = await fetch(`${API_URL}/user/${editingId}`, {
                 method: 'PUT',
@@ -94,23 +103,18 @@ function ManageUsers() {
 
     if (loading) return <div>Loading...</div>;
 
+    const filteredUsers = statusFilter === 'all'
+        ? users
+        : users.filter(u => u.account_status === statusFilter);
+
     return (
         <div className="transactions-container">
             <StatusMessage message={statusMessage} type={statusType} />
-            <label className="show-deleted-toggle">
-                <input
-                    type="checkbox"
-                    checked={showDeleted}
-                    onChange={(e) => setShowDeleted(e.target.checked)}
-                />
-                Show deactivated users
-            </label>
             <h2>Manage Users</h2>
             <div className="table-wrapper">
                 <table className="transactions-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
@@ -120,19 +124,27 @@ function ManageUsers() {
                     </thead>
                     <tbody>
                         {users.length === 0 ? (
-                            <tr><td colSpan="6">No users found</td></tr>
-                        ) : users.map(user => (
+                            <tr><td colSpan="5">No users found</td></tr>
+                        ) : filteredUsers.map(user => (
                             <tr key={user.user_id}>
                                 {editingId === user.user_id ? (
                                     <>
-                                        <td>{user.user_id}</td>
                                         <td>
                                             <input type="text" name="name" value={form.name} onChange={handleChange} />
                                         </td>
                                         <td>
                                             <input type="email" name="email" value={form.email} onChange={handleChange} />
                                         </td>
-                                        <td className="capitalize">{user.role === 'user' ? 'Staff' : user.role}</td>
+                                        <td>
+                                            {currentUser?.role === 'admin' && user.user_id !== currentUser?.id ? (
+                                                <select value={editRole} onChange={(e) => setEditRole(e.target.value)} className="status-select">
+                                                    <option value="user">Staff</option>
+                                                    <option value="admin">Admin</option>
+                                                </select>
+                                            ) : (
+                                                <span className="capitalize">{editRole === 'user' ? 'Staff' : editRole}</span>
+                                            )}
+                                        </td>
                                         <td>
                                             {currentUser?.role === 'admin' ? (
                                                 <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="status-select">
@@ -156,7 +168,6 @@ function ManageUsers() {
                                     </>
                                 ) : (
                                     <>
-                                        <td>{user.user_id}</td>
                                         <td>{user.name}</td>
                                         <td>{user.email}</td>
                                         <td className="capitalize">{user.role === 'user' ? 'Staff' : user.role}</td>
@@ -180,6 +191,7 @@ function ManageUsers() {
                     </tbody>
                 </table>
             </div>
+            <Pagination />
         </div>
     );
 }

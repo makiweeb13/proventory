@@ -108,11 +108,14 @@ const logoutController = (req, res) => {
 
 const updateUserController = async (req, res, next) => {
     const { id } = req.params;
-    const { name, email, account_status } = req.body;
+    const { name, email, role, account_status } = req.body;
 
     try {
-        if (name || email) {
-            await userService.updateUser(id, name, email);
+        if (role !== undefined && parseInt(req.user.id) === parseInt(id)) {
+            throw new ThrowError(403, 'Cannot change your own role');
+        }
+        if (name || email || role) {
+            await userService.updateUser(id, name, email, role);
         }
         if (account_status) {
             await userService.updateUserStatus(id, account_status);

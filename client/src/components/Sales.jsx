@@ -14,13 +14,11 @@ function Sales() {
 
     return (
         <>
-            <div className="side">
+            <div className="users-controls">
                 <SearchBar search={search} setSearch={setSearch} />
-                <Menu />
             </div>
-            <div className="side">
-                <AddSales />
-            </div>
+            <Menu />
+            <AddSales />
         </>
     )
 }

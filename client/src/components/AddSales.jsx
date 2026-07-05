@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
+import Pagination from './Pagination';
 
 function AddSales() {
     const { products, statusMessage, statusType, setStatusMessage, setProducts,
@@ -20,6 +21,7 @@ function AddSales() {
             } catch (error) {
                 console.error('Error fetching products:', error);
                 setStatusMessage('Error fetching products', 'error');
+                setLoading(false);
             }
         };
         fetchProducts();
@@ -31,6 +33,10 @@ function AddSales() {
 
     const handleAdd = async (product) => {
         const quantity = quantities[product.product_id] || 1;
+        if (quantity > product.stock) {
+            setStatusMessage(`Cannot sell ${quantity} units — only ${product.stock} in stock`, 'error');
+            return;
+        }
         try {
             const response = await fetch(`${API_URL}/sale`, {
                 method: 'POST',
@@ -53,7 +59,7 @@ function AddSales() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div className="dashboard-loading">Loading products...</div>;
 
     return (
         <div className="transactions-container">
@@ -83,17 +89,26 @@ function AddSales() {
                                         value={quantities[product.product_id] || 1}
                                         onChange={(e) => handleQuantityChange(product.product_id, e.target.value)}
                                         min={1}
+                                        max={product.stock || 1}
                                     />
                                 </td>
                                 <td>&#8369;{Number(product.selling_price).toFixed(2)}</td>
                                 <td>
-                                    <button className="add-btn" onClick={() => handleAdd(product)}>Add</button>
+                                    <button
+                                        className="add-btn"
+                                        onClick={() => handleAdd(product)}
+                                        disabled={product.stock === 0}
+                                        style={product.stock === 0 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                                    >
+                                        {product.stock === 0 ? 'Out of Stock' : 'Add'}
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            <Pagination />
         </div>
     );
 }

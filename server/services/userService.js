@@ -55,15 +55,16 @@ const addUser = async( name, email, hashedPassword, role ) => {
     return user
 }
 
-const updateUser = async ( id, name, email ) => {
+const updateUser = async ( id, name, email, role ) => {
+    const data = {};
+    if (name !== undefined) data.name = name;
+    if (email !== undefined) data.email = email;
+    if (role !== undefined) data.role = role;
     await prisma.users.update({
         where: {
             user_id: parseInt(id)
         },
-        data: {
-            name,
-            email
-        }
+        data
     })
 }
 

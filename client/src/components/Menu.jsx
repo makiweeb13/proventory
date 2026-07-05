@@ -1,8 +1,8 @@
 import useStore from "../store/store";
 import { useEffect } from "react";
 
-function Menu() {
-    const { page, search, totalPages, pageSize, order, sortBy, setPage, setPageSize, setOrder, setSortBy } = useStore();
+function Menu({ children }) {
+    const { search, pageSize, order, sortBy, setPage, setPageSize, setOrder, setSortBy } = useStore();
 
     const handleSortChange = (e) => {
         setSortBy(e.target.value);
@@ -52,20 +52,7 @@ function Menu() {
                         <option value={50}>50</option>
                     </select>
                 </label>
-            </div>
-            <div className="menu-pagination">
-                <button onClick={() => setPage(1)} disabled={page === 1}>&lt;&lt;</button>
-                <button onClick={() => setPage(page - 1)} disabled={page === 1}>&lt;</button>
-                <input
-                    type="number"
-                    value={page}
-                    onChange={(e) => setPage(Number(e.target.value) < 1 || Number(e.target.value) > totalPages ? 1 : Number(e.target.value))}
-                    min={1}
-                    max={totalPages}
-                    style={{ width: "3rem", textAlign: "center" }}
-                />
-                <button onClick={() => setPage(page + 1)} disabled={page === totalPages}>&gt;</button>
-                <button onClick={() => setPage(totalPages)} disabled={page === totalPages}>&gt;&gt;</button>
+                {children}
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
+import Pagination from './Pagination';
 
 function ManageCategories() {
     const { categories, statusMessage, statusType, setStatusMessage, setTotalPages,
@@ -124,6 +125,7 @@ function ManageCategories() {
                     </tbody>
                 </table>
             </div>
+            <Pagination />
         </div>
     );
 }

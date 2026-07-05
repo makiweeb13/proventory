@@ -4,6 +4,7 @@ import Stat from "./Stat";
 function StatsDisplay() {
 
     const [stats, setStats] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -16,6 +17,8 @@ function StatsDisplay() {
                 setStats(fetchedStats.statistics);
             } catch (error) {
                 console.error("Error fetching stats:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -27,8 +30,12 @@ function StatsDisplay() {
         'Low Stock Items', 'Total Inventory Value'
     ];
 
+    if (loading) {
+        return <div className="dashboard-loading">Loading statistics...</div>;
+    }
+
     if (stats.length === 0) {
-        return <h1>Loading statistics...</h1>;
+        return <div className="dashboard-loading">No statistics available</div>;
     }
 
     return (

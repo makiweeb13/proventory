@@ -15,11 +15,13 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 function SalesReport() {
-  const [period, setPeriod] = useState("monthly");
+  const [period, setPeriod] = useState("daily");
   const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/sale?period=${period}`, { credentials: "include" });
       const data = await response.json();
@@ -42,11 +44,12 @@ function SalesReport() {
           }
         ]
       });
+      setLoading(false);
     };
     fetchData();
   }, [period]);
 
-  if (!chartData) return <div>Loading chart...</div>;
+  if (loading) return <div className="dashboard-loading">Loading chart...</div>;
 
   return (
     <div className="sales-report-chart-container">
