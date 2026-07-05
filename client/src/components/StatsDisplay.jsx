@@ -22,15 +22,23 @@ function StatsDisplay() {
         fetchStats();
     }, []);
 
+    const DASHBOARD_LABELS = [
+        'Total Products', 'Total Stock', 'Total Sales',
+        'Low Stock Items', 'Total Inventory Value'
+    ];
+
     if (stats.length === 0) {
         return <h1>Loading statistics...</h1>;
     }
 
     return (
         <div className="stats-display">
-            {stats.map((stat, index) => (
-                <Stat key={index} value={stat.value} label={stat.label} />
-            ))}
+            {stats
+                .filter(stat => DASHBOARD_LABELS.includes(stat.label))
+                .map((stat, index) => (
+                    <Stat key={index} value={stat.value} label={stat.label} />
+                ))
+            }
         </div>
     );
 }

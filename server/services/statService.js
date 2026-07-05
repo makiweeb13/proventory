@@ -48,10 +48,25 @@ const getTotalSalesByUser = async (userId) => {
     return totalSales._sum.amount || 0;
 }
 
+const getLowStockCount = async (threshold = 5) => {
+    return await prisma.products.count({
+        where: { stock: { lte: threshold } }
+    });
+}
+
+const getTotalInventoryValue = async () => {
+    const products = await prisma.products.findMany({
+        select: { stock: true, buying_price: true }
+    });
+    return products.reduce((total, p) => total + (p.stock * Number(p.buying_price)), 0);
+}
+
 module.exports = {
     getTotalSales,
     getTotalUsers,
     getTotalProducts,
     getTotalStock,
-    getTotalSalesByUser
+    getTotalSalesByUser,
+    getLowStockCount,
+    getTotalInventoryValue
 };

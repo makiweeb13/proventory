@@ -5,23 +5,24 @@ import SalesReport from "./SalesReport";
 import ProductLeaderboard from "./ProductLeaderboard";
 
 function Dashboard() {
-
     const { setTitle } = useStore();
-    
+
     useEffect(() => {
         setTitle('Dashboard');
     }, [setTitle]);
 
     return (
         <>
+            <div className="dashboard-header">
+                <button className="print-btn" onClick={() => window.print()}>
+                    &#128424; Print Report
+                </button>
+            </div>
             <StatsDisplay />
             <div className="side">
                 <ProductLeaderboard />
-                <div className="grid">
-                    <SalesReport period="daily" />
-                    <SalesReport period="weekly" />
-                    <SalesReport period="monthly" />
-                    <SalesReport period="yearly" />
+                <div className="dashboard-chart">
+                    <SalesReport />
                 </div>
             </div>
         </>

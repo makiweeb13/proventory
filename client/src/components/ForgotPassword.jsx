@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { userSchema } from '../schemas/login-schema';
 import { useState } from 'react';
+import proventoryLogo from "../assets/proventory-logo.png";
 
 function ForgotPassword() {
     const navigate = useNavigate();
@@ -41,35 +42,50 @@ function ForgotPassword() {
     })
 
     return (
-        <div className="page">
-        
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="email">Email</label>
-                <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                />
-                <br />
-                <label htmlFor="password">New Password</label>
-                <input 
-                    type="password" 
-                    name="password" 
-                    id="password" 
-                    placeholder="new password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                />
-                <br />
-                { errors.email && touched.email && <p className='error-message'>{errors.email}</p> }
-                { errors.password && touched.password && <p className='error-message'>{errors.password}</p> }
-                { error && <p className='error-message'>{error}</p> }
-                <button type="submit">Save</button>
-            </form>
+        <div className="auth-page">
+            <div className="auth-card">
+                <img src={proventoryLogo} alt="Proventory" className="auth-logo" />
+                <h1 className="auth-title">Reset Password</h1>
+                <p className="auth-subtitle">Enter your email and new password</p>
+
+                <form className="auth-form" onSubmit={handleSubmit}>
+                    <div className="auth-field">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {errors.email && touched.email && <p className="auth-error">{errors.email}</p>}
+                    </div>
+
+                    <div className="auth-field">
+                        <label htmlFor="password">New Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Enter new password"
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {errors.password && touched.password && <p className="auth-error">{errors.password}</p>}
+                    </div>
+
+                    <button type="submit" className="auth-button">Save</button>
+
+                    {error && <p className="auth-error" style={{ textAlign: 'center', marginTop: '0.5rem' }}>{error}</p>}
+                </form>
+
+                <div className="auth-footer">
+                    <Link to="/login" className="auth-link">← Back to Login</Link>
+                </div>
+            </div>
         </div>
     )
 }
