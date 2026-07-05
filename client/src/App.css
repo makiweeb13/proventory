@@ -650,6 +650,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 1.5rem;
 }
 
 /* ===== Status Message ===== */
@@ -696,9 +697,9 @@ footer {
     color: #fff;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
-    padding: 2rem 2.5rem;
-    min-width: 180px;
-    min-height: 120px;
+    padding: 1.25rem 1.5rem;
+    min-width: 0;
+    min-height: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -712,19 +713,19 @@ footer {
 }
 
 .stat-value {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.4rem;
     letter-spacing: 1px;
 }
 
 .stat-label {
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 0.5px;
     opacity: 0.92;
     text-align: center;
-    max-width: 200px;
+    max-width: none;
     word-break: break-word;
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.85);
@@ -732,12 +733,10 @@ footer {
 }
 
 .stats-display {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-    align-items: stretch;
-    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
     width: 100%;
     box-sizing: border-box;
 }
@@ -765,6 +764,11 @@ footer {
     background: var(--color-accent-hover);
 }
 
+.report-header,
+.report-footer {
+    display: none;
+}
+
 .dashboard-chart {
     flex: 1;
     min-width: 300px;
@@ -774,7 +778,7 @@ footer {
     max-width: 100%;
     margin: 0;
     width: 100%;
-    height: 100%;
+    height: 355px;
 }
 
 .chart-header {
@@ -811,16 +815,18 @@ footer {
 .sales-report-chart-container {
     background: var(--color-bg-card);
     border-radius: var(--radius-xl);
-    padding: 2rem 2.5rem;
+    padding: 1.5rem;
     box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
-    max-width: 800px;
     box-sizing: border-box;
-    width: fit-content;
-    height: fit-content;
+}
+
+.chart-wrapper {
+    flex: 1;
+    position: relative;
+    min-height: 0;
 }
 
 @media (max-width: 600px) {
@@ -838,11 +844,11 @@ footer {
 /* ===== Leaderboard ===== */
 .leaderboard-container {
     background: var(--color-bg-card);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
-    padding: 1.5rem 1rem;
-    margin: 2rem;
-    max-width: 420px;
+    padding: 1.5rem;
+    margin: 0;
+    max-width: 340px;
     width: 100%;
     height: fit-content;
 }
@@ -1199,13 +1205,13 @@ footer {
     }
 
     .stat-card {
-        padding: 1.5rem;
+        padding: 1rem 1.25rem;
         min-width: 0;
         width: 100%;
     }
 
     .stat-value {
-        font-size: 2rem;
+        font-size: 1.4rem;
     }
 
     .grid {
@@ -1248,6 +1254,21 @@ footer {
 }
 
 @media print {
+    @page {
+        margin: 0.75in;
+        size: portrait;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        color: #000;
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
     .sidebar,
     .sidebar-overlay,
     .hamburger-btn,
@@ -1261,34 +1282,180 @@ footer {
 
     .content-area {
         margin-left: 0 !important;
-        padding: 1rem !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
-    body {
-        margin: 0;
-        padding: 0;
-        background: #fff;
+    .page-layout,
+    .main-content {
+        min-height: auto !important;
+        display: block !important;
+        flex: none !important;
+    }
+
+    .report-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 28pt;
+    }
+
+    .report-header h1 {
+        font-size: 28pt;
+        font-weight: bold;
+        letter-spacing: 3px;
+        color: #000;
+        margin: 0 0 4pt 0;
+    }
+
+    .report-header h2 {
+        font-size: 16pt;
+        font-weight: normal;
+        color: #333;
+        margin: 0 0 10pt 0;
+    }
+
+    .report-header .report-date {
+        font-size: 9pt;
+        color: #666;
+        margin: 0 0 14pt 0;
+    }
+
+    .report-header hr {
+        border: none;
+        border-top: 2px solid #000;
+        margin: 0 auto 24pt auto;
+        width: 50%;
+    }
+
+    .report-footer {
+        display: block !important;
+        text-align: center;
+        font-size: 8pt;
+        color: #999;
+        margin-top: 28pt;
+        border-top: 1px solid #ccc;
+        padding-top: 6pt;
+        page-break-after: avoid;
+    }
+
+    .stats-display {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12pt;
+        margin: 0 0 24pt 0;
+        page-break-inside: avoid;
     }
 
     .stat-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
+        background: none !important;
+        border: 1px solid #333 !important;
+        border-radius: 4pt !important;
+        padding: 10pt 8pt !important;
+        box-shadow: none !important;
+        min-height: auto !important;
+        min-width: 0 !important;
     }
 
-    .leaderboard-container,
+    .stat-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .stat-value {
+        font-size: 18pt !important;
+        color: #000 !important;
+        margin-bottom: 2pt !important;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-label {
+        font-size: 8pt !important;
+        color: #555 !important;
+        max-width: none !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        font-weight: normal !important;
+        opacity: 1 !important;
+    }
+
+    .side {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 16pt;
+        page-break-inside: avoid;
+    }
+
+    .leaderboard-container {
+        border: 1px solid #bbb !important;
+        box-shadow: none !important;
+        padding: 12pt 14pt !important;
+        margin: 0 !important;
+        max-width: 40% !important;
+        border-radius: 4pt !important;
+        background: none !important;
+    }
+
+    .leaderboard-container h2 {
+        color: #000 !important;
+        text-align: left !important;
+        font-size: 12pt !important;
+        margin-bottom: 8pt !important;
+        border-bottom: 1px solid #333;
+        padding-bottom: 4pt;
+    }
+
+    .leaderboard-item {
+        padding: 3pt 0 !important;
+        margin-bottom: 2pt !important;
+        border-bottom: 1px dotted #ddd;
+        background: none !important;
+    }
+
+    .rank {
+        color: #000 !important;
+        font-weight: bold !important;
+    }
+
+    .product-name {
+        color: #000 !important;
+    }
+
+    .product-sales,
+    .product-stock {
+        color: #555 !important;
+    }
+
+    .dashboard-chart {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
     .sales-report-chart-container {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
+        border: 1px solid #bbb !important;
+        box-shadow: none !important;
+        padding: 12pt !important;
+        border-radius: 4pt !important;
+        background: none !important;
+        height: 355px !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+
+    .chart-header {
+        margin-bottom: 8pt;
+    }
+
+    .chart-header h3 {
+        color: #000 !important;
+        font-size: 12pt !important;
+    }
+
+    .chart-header select {
+        display: none !important;
     }
 
     .dashboard-header {
-        justify-content: center;
-    }
-
-    .dashboard-chart .sales-report-chart-container {
-        padding: 1rem;
-        max-width: 100%;
+        display: none !important;
     }
 }

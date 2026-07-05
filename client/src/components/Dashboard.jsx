@@ -18,12 +18,24 @@ function Dashboard() {
                     &#128424; Print Report
                 </button>
             </div>
+            <div className="report-header">
+                <h1>PROVENTORY</h1>
+                <h2>Inventory Summary Report</h2>
+                <p className="report-date">Generated: {new Date().toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                })}</p>
+                <hr />
+            </div>
             <StatsDisplay />
             <div className="side">
                 <ProductLeaderboard />
                 <div className="dashboard-chart">
                     <SalesReport />
                 </div>
+            </div>
+            <div className="report-footer">
+                Proventory &mdash; Confidential
             </div>
         </>
     );

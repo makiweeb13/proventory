@@ -59,7 +59,9 @@ function SalesReport() {
           <option value="yearly">Yearly</option>
         </select>
       </div>
-      <Line data={chartData} options={{ responsive: true, plugins: { legend: { display: true } } }} />
+      <div className="chart-wrapper">
+        <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } } }} />
+      </div>
     </div>
   );
 }
