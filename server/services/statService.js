@@ -11,7 +11,11 @@ const getTotalSales = async () => {
 }
 
 const getTotalUsers = async () => {
-    const totalUsers = await prisma.users.count();
+    const totalUsers = await prisma.users.count({
+        where: {
+            account_status: { not: 'deleted' }
+        }
+    });
     return totalUsers;
 }
 

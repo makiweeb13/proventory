@@ -19,19 +19,23 @@ const getUserById = async ( id ) => {
     return user
 }
 
-const getAllUsers = async ( search, order = 'asc', skip, limit ) => {
+const getAllUsers = async ( search, order = 'asc', skip, limit, showDeleted = false ) => {
+    const where = {
+        OR: [
+            { name: { contains: search } },
+            { email: { contains: search } }
+        ]
+    };
+    if (!showDeleted) {
+        where.account_status = { not: 'deleted' };
+    }
     const users = await prisma.users.findMany({
         orderBy: {
             name: order
         },
         skip: skip,
         take: limit,
-        where: {
-            OR: [
-                { name: { contains: search } },
-                { email: { contains: search } }
-            ]
-        }
+        where
     })
     return users
 }
@@ -61,9 +65,23 @@ const updateUser = async ( id, name, email ) => {
 }
 
 const deleteUser = async ( id ) => {
-    await prisma.users.delete({
+    await prisma.users.update({
         where: {
             user_id: parseInt(id)
+        },
+        data: {
+            account_status: 'deleted'
+        }
+    })
+}
+
+const updateUserStatus = async ( id, status ) => {
+    await prisma.users.update({
+        where: {
+            user_id: parseInt(id)
+        },
+        data: {
+            account_status: status
         }
     })
 }
@@ -79,15 +97,17 @@ const updateUserPassword = async ( id, hashedPassword ) => {
     })
 }
 
-const getTotalUsersCount = async ( search ) => {
-    const count = await prisma.users.count({
-        where: {
-            OR: [
-                { name: { contains: search } },
-                { email: { contains: search } }
-            ]
-        }
-    });
+const getTotalUsersCount = async ( search, showDeleted = false ) => {
+    const where = {
+        OR: [
+            { name: { contains: search } },
+            { email: { contains: search } }
+        ]
+    };
+    if (!showDeleted) {
+        where.account_status = { not: 'deleted' };
+    }
+    const count = await prisma.users.count({ where });
     return count
 }
 
@@ -99,5 +119,6 @@ module.exports = {
     getUserById,
     getAllUsers,
     updateUserPassword,
-    getTotalUsersCount
+    getTotalUsersCount,
+    updateUserStatus
 }
