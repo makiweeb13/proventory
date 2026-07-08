@@ -4,8 +4,7 @@ import useStore from '../store/store';
 const PermittedRoutes = () => {
     const { user } = useStore();
 
-    if (user.role !== 'admin') {
-        // If the user is not an admin, redirect to the dashboard
+    if (!user || user.role !== 'admin') {
         return <Navigate to="/" replace />;
     }
 
