@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
-const { PrismaClient, Decimal } = require('../generated/prisma');
-const prisma = new PrismaClient();
+const { Decimal } = require('../generated/prisma');
+const prisma = require('../utils/prisma');
 
 const seed = async () => {
     const result = { users: [], categories: [], products: [], sales: [] };

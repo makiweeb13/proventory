@@ -1,8 +1,5 @@
-const { PrismaClient, Decimal } = require('../generated/prisma');
-
-const globalForPrisma = globalThis;
-const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+const { Decimal } = require('../generated/prisma');
+const prisma = require('../utils/prisma');
 
 
 const addSale = async (product_id, user_id, quantity, selling_price) => {

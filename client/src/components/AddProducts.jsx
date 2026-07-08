@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { productSchema } from "../schemas/product-schema";
+import API_URL from "../util/api";
 import useStore from "../store/store";
 
 function AddProducts({ categories, onSuccess }) {
@@ -8,7 +9,6 @@ function AddProducts({ categories, onSuccess }) {
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
             const response = await fetch(`${API_URL}/product`, {
                 method: "POST",
                 headers: {

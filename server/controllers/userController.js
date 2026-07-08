@@ -101,8 +101,7 @@ const getAllUsersController = async (req, res, next) => {
 }
 
 const logoutController = (req, res) => {
-  // Clear the JWT cookie
-  res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'strict' });
+  res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
  
   res.status(200).json({ message: 'Logged out successfully' });
 }

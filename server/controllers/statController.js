@@ -23,7 +23,8 @@ const getStatsController = async (req, res, next) => {
             ]
         });
     } catch (error) {
-        next(new ThrowError(500, 'Failed to fetch statistics'));
+        console.error('Failed to fetch statistics:', error);
+        next(error);
     }
 };
 

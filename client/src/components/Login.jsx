@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { userSchema } from '../schemas/login-schema';
 import { useState } from 'react';
+import API_URL from "../util/api";
 import proventoryLogo from "../assets/proventory-logo.png";
 
 function Login() {
@@ -10,7 +11,6 @@ function Login() {
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
             const response = await fetch(`${API_URL}/user/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

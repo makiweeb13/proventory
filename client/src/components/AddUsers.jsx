@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { userSchema } from "../schemas/register-schema";
+import API_URL from "../util/api";
 import useStore from "../store/store";
 
 function AddUsers({ onSuccess }) {
@@ -8,7 +9,6 @@ function AddUsers({ onSuccess }) {
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
             const response = await fetch(`${API_URL}/user/register`, {
                 method: "POST",
                 headers: {

@@ -1,3 +1,4 @@
+import API_URL from "../util/api";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -22,7 +23,6 @@ function SalesReport() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/sale?period=${period}`, { credentials: "include" });
       const data = await response.json();
       setChartData({
@@ -37,8 +37,8 @@ function SalesReport() {
           {
             label: `${period.charAt(0).toUpperCase() + period.slice(1)} Sales`,
             data: data.map(item => item.totalSales),
-            borderColor: "#3b82f6",
-            backgroundColor: "rgba(59, 130, 246, 0.1)",
+            borderColor: "#4f46e5",
+            backgroundColor: "rgba(79, 70, 229, 0.1)",
             tension: 0.3,
             fill: true
           }

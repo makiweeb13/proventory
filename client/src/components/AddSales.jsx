@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_URL from '../util/api';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 import Pagination from './Pagination';
@@ -8,8 +9,6 @@ function AddSales() {
             search, setTotalPages, page, order, pageSize, user, updateProduct } = useStore();
     const [loading, setLoading] = useState(true);
     const [quantities, setQuantities] = useState({});
-    const API_URL = import.meta.env.VITE_API_URL;
-
     useEffect(() => {
         const fetchProducts = async () => {
             try {

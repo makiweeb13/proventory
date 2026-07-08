@@ -1,3 +1,4 @@
+import API_URL from "../util/api";
 import { useEffect, useState } from "react";
 
 function ProductLeaderboard() {
@@ -6,7 +7,6 @@ function ProductLeaderboard() {
 
     useEffect(() => {
         const fetchTopProducts = async () => {
-            const API_URL = import.meta.env.VITE_API_URL;
             const res = await fetch(`${API_URL}/product/top`, { credentials: "include" });
             const data = await res.json();
             setProducts(data);

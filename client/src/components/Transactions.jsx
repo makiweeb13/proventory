@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API_URL from "../util/api";
 import useStore from "../store/store";
 import SearchBar from "./SearchBar";
 import Menu from "./Menu";
@@ -19,7 +20,6 @@ function Transactions() {
     useEffect(() => {
         const fetchTransactions = async () => {
             setLoading(true);
-            const API_URL = import.meta.env.VITE_API_URL;
             try {
                 const response = await fetch(`${API_URL}/sale/transactions?search=${search}&page=${page}&order=${order}&pageSize=${pageSize}`, {
                     credentials: "include"

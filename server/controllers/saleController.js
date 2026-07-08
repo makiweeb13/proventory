@@ -10,7 +10,8 @@ const addSaleController = async (req, res, next) => {
         const product = await productService.getProductById(product_id);
         res.status(200).json({ sale, product, message: 'Sale added successfully' });
     } catch (error) {
-        next(new ThrowError(500, 'Failed to add sale'));
+        console.error('Failed to add sale:', error);
+        next(error);
     }
 }
 

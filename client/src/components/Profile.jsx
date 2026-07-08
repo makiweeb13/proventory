@@ -1,3 +1,4 @@
+import API_URL from "../util/api";
 import useStore from "../store/store";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -12,11 +13,12 @@ function Profile() {
 
     useEffect(() => {
         const getProfile = async () => {
-            const API_URL = import.meta.env.VITE_API_URL;
+            
             try {
                 const response = await fetch(`${API_URL}/user/${id}`, { credentials: 'include' });
                 if (!response.ok) {
                     console.error('Failed to fetch profile');
+                    setLoading(false);
                     return;
                 }
                 const data = await response.json();
@@ -31,7 +33,7 @@ function Profile() {
     }, [id, setTitle]);
 
     const handleLogout = async () => {
-        const API_URL = import.meta.env.VITE_API_URL;
+        
         try {
             await fetch(`${API_URL}/user/logout`, {
                 method: 'POST',

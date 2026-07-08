@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { categorySchema } from "../schemas/category-schema";
+import API_URL from "../util/api";
 import useStore from "../store/store";
 
 function AddCategories({ onSuccess }) {
@@ -9,8 +10,6 @@ function AddCategories({ onSuccess }) {
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
-            
             const response = await fetch(`${API_URL}/category`, {
                 method: "POST",
                 headers: {
