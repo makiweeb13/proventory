@@ -10,18 +10,18 @@ const SECRET_KEY = process.env.JWT_SECRET;
 const registerController = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
-    if (!name || !email || !password || !role) {
-        throw new ThrowError(400, 'All fields are required');
-    }
-
     try {
+        if (!name || !email || !password || !role) {
+            throw new ThrowError(400, 'All fields are required');
+        }
         const existingUser = await userService.getUserByEmail(email);
         if (existingUser) {
             throw new ThrowError(400, 'User already exists');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userService.addUser(name, email, hashedPassword, role);
-        res.status(201).json({ user, message: 'User registered successfully' });
+        const { password: _, ...safeUser } = user;
+        res.status(201).json({ user: safeUser, message: 'User registered successfully' });
     } catch (error) {
         next(error);
     }
@@ -71,7 +71,8 @@ const getUserController = async (req, res, next) => {
         if (!user) {
             throw new ThrowError(404, 'User not found');
         }
-        res.json(user);
+        const { password: _, ...safeUser } = user;
+        res.json(safeUser);
     } catch (error) {
         next(error);
     }
@@ -140,11 +141,10 @@ const deleteUserController = async (req, res, next) => {
 const forgotPasswordController = async (req, res, next) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-        throw new ThrowError(400, 'Email and password are required');
-    }
-
     try {
+        if (!email || !password) {
+            throw new ThrowError(400, 'Email and password are required');
+        }
         const user = await userService.getUserByEmail(email);
         if (!user) {
             throw new ThrowError(404, 'User not found');

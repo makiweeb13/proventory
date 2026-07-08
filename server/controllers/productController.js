@@ -1,4 +1,3 @@
-const e = require('express');
 const { ThrowError } = require('../middleware/errorHandler');
 const productService = require('../services/productService');
 const saleController = require('./saleController');
@@ -6,11 +5,10 @@ const saleController = require('./saleController');
 const addProductController = async (req, res, next) => {
     const { name, stock, buying_price, selling_price, category_id } = req.body;
 
-    if (!name || !stock || !buying_price || !selling_price || !category_id) {
-        throw new ThrowError(400, 'All product fields are required');
-    }
-
     try {
+        if (!name || !stock || !buying_price || !selling_price || !category_id) {
+            throw new ThrowError(400, 'All product fields are required');
+        }
         existingProduct = await productService.getProductByName(name);
         if (existingProduct && category_id == existingProduct.category_id) {
             throw new ThrowError(400, 'Product already exists');
@@ -47,11 +45,10 @@ const updateProductController = async (req, res, next) => {
     const { id } = req.params;
     const { name, stock, buying_price, selling_price, category_id } = req.body;
 
-    if (!name || !stock || !buying_price || !selling_price || !category_id) {
-        throw new ThrowError(400, 'All product fields are required');
-    }
-
     try {
+        if (!name || !stock || !buying_price || !selling_price || !category_id) {
+            throw new ThrowError(400, 'All product fields are required');
+        }
         const product = await productService.updateProduct(id, name, stock, buying_price, selling_price, category_id);
         return res.status(200).json({ product, message: 'Product updated successfully' });
     } catch (error) {
