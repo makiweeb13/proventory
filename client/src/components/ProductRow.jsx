@@ -31,7 +31,15 @@ function ProductRow({ product, isEditing, form, categories, isAdmin,
   return (
     <tr>
       <td>{product.name}</td>
-      <td>{product.stock}</td>
+      <td>
+        {product.stock}
+        {product.stock <= 10 && product.stock > 0 && (
+          <span className="low-stock-badge">Low</span>
+        )}
+        {product.stock === 0 && (
+          <span className="out-of-stock-badge">Out</span>
+        )}
+      </td>
       {isAdmin && <td>&#8369;{Number(product.buying_price).toFixed(2)}</td>}
       <td>&#8369;{Number(product.selling_price).toFixed(2)}</td>
       <td>{categories.find(c => c.category_id === product.category_id)?.name || 'N/A'}</td>

@@ -4,12 +4,14 @@ import useStore from "../store/store";
 import SearchBar from "./SearchBar";
 import AddProducts from "./AddProducts";
 import ManageProducts from "./ManageProducts";
+import ImportProducts from "./ImportProducts";
 import Menu from "./Menu";
 
 function Products() {
     const { setTitle, categories, setCategories, setStatusMessage, search, setSearch } = useStore();
     const [loading, setLoading] = useState(true);
     const [showAddProduct, setShowAddProduct] = useState(false);
+    const [showImport, setShowImport] = useState(false);
 
     useEffect(() => {
         setTitle('Products');
@@ -41,9 +43,13 @@ function Products() {
             <div className="users-controls">
                 <SearchBar search={search} setSearch={setSearch} />
                 <button className="add-user-btn" onClick={() => setShowAddProduct(true)}>Add Product</button>
+                <button className="add-user-btn" onClick={() => setShowImport(true)}>Import CSV</button>
             </div>
             <Menu />
             <ManageProducts categories={categories} />
+            {showImport && (
+                <ImportProducts onClose={() => setShowImport(false)} />
+            )}
             {showAddProduct && (
                 <div className="modal-overlay" onClick={() => setShowAddProduct(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>

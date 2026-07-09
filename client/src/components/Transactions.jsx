@@ -9,7 +9,7 @@ function Transactions() {
     const { setTitle, setTotalPages, search, setSearch, page, order, pageSize, setOrder, setSortBy } = useStore();
 
     useEffect(() => {
-        setTitle('Transactions');
+        setTitle('Sale History');
         setOrder('desc');
         setSortBy('date');
     }, [setOrder, setSortBy, setTitle]);
@@ -71,7 +71,7 @@ function Transactions() {
             </div>
             <Menu />
             <div className="transactions-container">
-                <h2>Recent Sales</h2>
+                <h2>Sale History</h2>
                 <div className="table-wrapper">
                     <table className="transactions-table">
                     <thead>

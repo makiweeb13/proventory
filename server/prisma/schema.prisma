@@ -17,6 +17,7 @@ model users {
   role           users_role
   account_status users_account_status @default(active)
   sales          sales[]
+  audit_logs     audit_logs[]
 }
 
 model categories {
@@ -52,6 +53,17 @@ model sales {
 
   @@index([product_id], map: "product_id")
   @@index([user_id], map: "user_id")
+}
+
+model audit_logs {
+  audit_id   Int      @id @default(autoincrement())
+  user_id    Int?
+  action     String   @db.VarChar(255)
+  entity     String   @db.VarChar(255)
+  entity_id  Int?
+  details    String?  @db.Text
+  created_at DateTime @default(now())
+  users      users?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum users_role {

@@ -30,13 +30,16 @@ function Sidebar({ isOpen, onClose }) {
                     <NavLink to="/products" className="sidebar-link">
                         Products
                     </NavLink>
+                    <NavLink to="/audit" className="sidebar-link">
+                        Audit Log
+                    </NavLink>
                     </>
                 }
                 <NavLink to="/sales" className="sidebar-link">
-                    Sales
+                    New Sale
                 </NavLink>
                 <NavLink to="/transactions" className="sidebar-link">
-                    Transactions
+                    Sale History
                 </NavLink>
             </nav>
         </aside>

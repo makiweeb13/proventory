@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const { ThrowError } = require('../middleware/errorHandler');
 const userService = require('../services/userService');
+const auditService = require('../services/auditService');
 
 dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET;
@@ -118,7 +119,9 @@ const updateUserController = async (req, res, next) => {
             await userService.updateUser(id, name, email, role);
         }
         if (account_status) {
+            const user = await userService.getUserById(id);
             await userService.updateUserStatus(id, account_status);
+            await auditService.logAction(req.user.id, 'UPDATE_USER_STATUS', 'users', id, { from: user?.account_status, to: account_status });
         }
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -130,7 +133,9 @@ const deleteUserController = async (req, res, next) => {
     const { id } = req.params;
 
     try {
+        const user = await userService.getUserById(id);
         await userService.deleteUser(id);
+        await auditService.logAction(req.user.id, 'DELETE_USER', 'users', id, { email: user?.email });
         res.status(200).json({ message: 'User deactivated successfully' });
     } catch (error) {
         next(error);

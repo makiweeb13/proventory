@@ -5,6 +5,7 @@ const authenticateToken = require('../middleware/authenticateToken');
 const checkAdmin = require('../middleware/checkAdmin');
 
 router.post('/', authenticateToken, checkAdmin, productController.addProductController);
+router.post('/import', authenticateToken, checkAdmin, productController.upload.single('file'), productController.bulkImportController);
 router.get('/', authenticateToken, productController.getAllProductsController);
 router.put('/:id', authenticateToken, checkAdmin, productController.updateProductController);
 router.patch('/:id/stock', authenticateToken, checkAdmin, productController.addStockController);

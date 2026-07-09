@@ -8,7 +8,7 @@ function Sales() {
     const { setTitle, search, setSearch, setStatusMessage } = useStore();
 
     useEffect(() => {
-        setTitle('Sales');
+        setTitle('New Sale');
         setStatusMessage('');
     }, [setStatusMessage, setTitle]);
 
