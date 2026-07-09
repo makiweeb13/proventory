@@ -13,33 +13,45 @@ A web-based inventory management system built with React, Node.js, and TiDB (MyS
 - Demo credentials always visible on login for testing
 
 ### 2. Dashboard
-- Overview of key inventory metrics (total products, stock, sales, low stock items, inventory value)
+- Overview of key inventory metrics (total products, stock, sales, profit, low stock items, inventory value)
 - Sales statistics with daily/weekly/monthly/yearly chart
 - Top selling products leaderboard
+- Total Profit dashboard stat
 - Printable report view
 
 ### 3. Product Management
 - Add, edit, and delete products
 - Categorize products
+- **Add Stock** — inline button to increment stock without editing the product
+- **Bulk CSV Import** — upload a CSV file with product data for mass import
+- **Low Stock Badges** — visual "Low" (yellow) and "Out" (red) indicators when stock ≤ 10 or 0
 - Track stock levels (stock can reach 0 without deletion)
 - Price management (buying and selling prices)
 - Buying price visible only to admins
 - Search, filtering, and pagination
 
-### 4. Sales Management
-- Record sales transactions with quantity selection
+### 4. Sales & Transactions
+- Record sales with quantity selection and optional customer name
 - Automatic stock decrement on sale
 - Oversell protection (prevents selling more than available stock)
-- Out-of-stock products clearly indicated
-- Sales history view with search and pagination
+- **Invoice Preview** — receipt modal with print button after every sale
+- **Profit & Loss** — profit column calculated per transaction
+- Terminology: "New Sale" for recording, "Sale History" for viewing past transactions
+- Sale history view with search and pagination
 - Export transactions to CSV
 
-### 5. Sales Reports
+### 5. Profit & Loss
+- Automatic profit calculation per sale: `(selling_price - buying_price) * quantity`
+- Profit column displayed in the Sale History table
+- Total Profit stat on the dashboard
+- Color-coded (green for positive, red for negative)
+
+### 6. Sales Reports
 - Daily, weekly, monthly, and yearly sales aggregation
 - Visual chart on the dashboard
 - Period selector for different granularity
 
-### 6. User Management (Admin Only)
+### 7. User Management (Admin Only)
 - Create user accounts via modal form
 - Assign user roles (admin or staff)
 - Edit user name, email, role, and account status
@@ -48,17 +60,30 @@ A web-based inventory management system built with React, Node.js, and TiDB (MyS
 - Status filter dropdown (All / Active / Inactive / Suspended / Deleted)
 - Admins cannot change their own role (prevents accidental lockout)
 
-### 7. Categories Management
+### 8. Profile Page
+- View your name, email, and role
+- **Edit Profile** — update your own name and email
+- **Change Password** — update password with current password verification
+- Logout button clears the JWT cookie and redirects to login
+
+### 9. Categories Management
 - Full CRUD: create, read, update, delete
 - Input validation (name required, max length)
 - Pagination and search filtering
 - Categories linked to products
 
-### 8. Profile Page
-- Displays logged-in user's details (name, email, role, account status)
-- Logout button clears the JWT cookie and redirects to login
+### 10. Audit Log (Admin Only)
+- Tracks key actions: product deletion, stock addition, user status changes
+- Paginated table with user, action, entity, details, and timestamp
+- Searchable by user name, action, or entity
 
-### 9. Seed System
+### 11. Dark / Light Theme
+- Toggle between dark and light mode via a sun/moon button in the header
+- Preference persisted to localStorage
+- All components adapt via CSS custom properties
+- Light mode uses softer shadows for a cleaner look
+
+### 12. Seed System
 - Idempotent seed route creates sample data: admin user, staff user, categories, products, and sales
 - Auto-detects authentication — if no admin exists, seed is accessible without auth
 - Seed passwords pass all validation rules
@@ -127,6 +152,8 @@ Credentials:
 - TiDB (MySQL-compatible cloud database)
 - bcryptjs
 - JSON Web Tokens
+- multer (file upload)
+- csv-parse (CSV parsing)
 
 ### Infrastructure
 - npm workspaces (monorepo)
@@ -144,7 +171,7 @@ proventory/
 │       ├── components/    # React components
 │       ├── store/         # Zustand store
 │       ├── schemas/       # Yup validation schemas
-│       └── App.css        # Global styles (dark theme)
+│       └── App.css        # Global styles (dark/light themes)
 ├── server/                 # Backend Node.js application
 │   ├── controllers/      # Route controllers
 │   ├── services/         # Business logic with Prisma singleton
@@ -154,3 +181,18 @@ proventory/
 ├── package.json           # Root workspace config
 └── README.md
 ```
+
+## Deployment
+
+### Deploy to Vercel
+
+1. Push the repository to GitHub
+2. Go to [vercel.com](https://vercel.com) and import the repository
+3. Set the **Root Directory** to `./` (monorepo root)
+4. Add the following **Environment Variables** in Vercel:
+   - `DATABASE_URL` — your TiDB connection string
+   - `JWT_SECRET` — a random hex string
+   - `FRONTEND_URL` — your Vercel deployment domain (e.g. `https://proventory.vercel.app`)
+   - `NODE_ENV` — set to `production`
+5. Deploy — Vercel will build the frontend and deploy the API as a serverless function
+6. The frontend at `yourdomain.vercel.app` will call `/api/...` which routes to the serverless function
