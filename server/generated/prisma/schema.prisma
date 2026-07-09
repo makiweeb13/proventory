@@ -1,0 +1,79 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  user_id        Int                  @id @default(autoincrement())
+  name           String               @db.VarChar(255)
+  email          String               @unique(map: "email_UNIQUE") @db.VarChar(255)
+  password       String               @db.VarChar(255)
+  role           users_role
+  account_status users_account_status @default(active)
+  sales          sales[]
+  audit_logs     audit_logs[]
+}
+
+model categories {
+  category_id Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  products    products[]
+}
+
+model products {
+  product_id    Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  stock         Int         @default(1)
+  buying_price  Decimal     @db.Decimal(10, 2)
+  selling_price Decimal     @db.Decimal(10, 2)
+  date_added    DateTime    @db.Date
+  category_id   Int?
+  categories    categories? @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "products_ibfk_1")
+  sales         sales[]
+
+  @@index([category_id], map: "category_id")
+}
+
+model sales {
+  sales_id      Int       @id @default(autoincrement())
+  product_id    Int?
+  user_id       Int?
+  amount        Decimal   @db.Decimal(10, 2)
+  quantity      Int       @default(1)
+  customer_name String?   @db.VarChar(255)
+  sale_date     DateTime  @db.Date
+  products      products? @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "sales_ibfk_1")
+  users         users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "sales_ibfk_2")
+
+  @@index([product_id], map: "product_id")
+  @@index([user_id], map: "user_id")
+}
+
+model audit_logs {
+  audit_id   Int      @id @default(autoincrement())
+  user_id    Int?
+  action     String   @db.VarChar(255)
+  entity     String   @db.VarChar(255)
+  entity_id  Int?
+  details    String?  @db.Text
+  created_at DateTime @default(now())
+  users      users?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum users_role {
+  user
+  admin
+}
+
+enum users_account_status {
+  active
+  inactive
+  suspended
+  deleted
+}
