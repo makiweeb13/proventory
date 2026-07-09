@@ -1,5 +1,5 @@
 function ProductRow({ product, isEditing, form, categories, isAdmin,
-  handleChange, startEdit, cancelEdit, handleEdit, handleDelete }) {
+  handleChange, startEdit, cancelEdit, handleEdit, handleDelete, onAddStock }) {
 
   if (isEditing) {
     return (
@@ -37,6 +37,7 @@ function ProductRow({ product, isEditing, form, categories, isAdmin,
       <td>{categories.find(c => c.category_id === product.category_id)?.name || 'N/A'}</td>
       <td>
         <div className="btn-group">
+          <button className="add-btn" onClick={() => onAddStock(product)}>+ Stock</button>
           <button className="edit-btn" onClick={() => startEdit(product)}>Edit</button>
           <button className="delete-btn" onClick={() => handleDelete(product)}>Delete</button>
         </div>

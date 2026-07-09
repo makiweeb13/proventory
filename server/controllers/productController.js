@@ -67,6 +67,21 @@ const deleteProductController = async (req, res, next) => {
     }
 };
 
+const addStockController = async (req, res, next) => {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    try {
+        if (!quantity || quantity < 1) {
+            throw new ThrowError(400, 'Quantity must be at least 1');
+        }
+        const product = await productService.addStock(id, quantity);
+        return res.status(200).json({ product, message: 'Stock added successfully' });
+    } catch (error) {
+        return next(error);
+    }
+};
+
 const getTopProductsController = async (req, res, next) => {
     try {
         const topProducts = await productService.getTopProducts(10);
@@ -81,5 +96,6 @@ module.exports = {
     getAllProductsController,
     updateProductController,
     deleteProductController,
+    addStockController,
     getTopProductsController
 };

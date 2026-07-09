@@ -46,7 +46,12 @@ const useStore = create((set) => ({
     })),
     deleteProduct: (id) => set((state) => ({
         products: state.products.filter(product => product.product_id !== id)
-    }))
+    })),
+    updateProductStock: (productId, newStock) => set((state) => ({
+        products: state.products.map(product =>
+            product.product_id === productId ? { ...product, stock: newStock } : product
+        )
+    })),
 }));
 
 export default useStore;

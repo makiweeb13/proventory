@@ -12,6 +12,8 @@ router.get('/me', authenticateToken, userController.getCurrentUser);
 router.post('/forgot-password', authLimiter, userController.forgotPasswordController);
 router.get('/', authenticateToken, checkAdmin, userController.getAllUsersController);
 router.get('/:id', authenticateToken, userController.getUserController);
+router.put('/profile', authenticateToken, userController.updateProfileController);
+router.put('/change-password', authenticateToken, userController.changePasswordController);
 router.put('/:id', authenticateToken, checkAdmin, userController.updateUserController);
 router.delete('/:id', authenticateToken, checkAdmin, userController.deleteUserController);
 

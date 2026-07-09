@@ -9,6 +9,7 @@ function AddSales() {
             search, setTotalPages, page, order, pageSize, user, updateProduct } = useStore();
     const [loading, setLoading] = useState(true);
     const [quantities, setQuantities] = useState({});
+    const [customerName, setCustomerName] = useState('');
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -44,7 +45,8 @@ function AddSales() {
                     product_id: product.product_id,
                     user_id: user.id,
                     quantity,
-                    selling_price: product.selling_price
+                    selling_price: product.selling_price,
+                    customer_name: customerName || undefined
                 }),
                 credentials: 'include'
             });
@@ -64,6 +66,17 @@ function AddSales() {
         <div className="transactions-container">
             <StatusMessage message={statusMessage} type={statusType} />
             <h2>Add Sales</h2>
+            <div className="customer-name-row">
+                <label htmlFor="customer-name">Customer Name:</label>
+                <input
+                    id="customer-name"
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Optional"
+                    className="customer-name-input"
+                />
+            </div>
             <div className="table-wrapper">
                 <table className="transactions-table">
                     <thead>

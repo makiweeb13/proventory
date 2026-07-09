@@ -38,13 +38,16 @@ function Transactions() {
     }, [order, page, pageSize, search, setTotalPages]);
 
     const handleExportCSV = () => {
-        const headers = ['Product', 'Sold By', 'Amount', 'Date'];
+        const headers = ['Product', 'Sold By', 'Customer', 'Quantity', 'Amount', 'Profit', 'Date'];
         const csvRows = [headers.join(',')];
         transactions.forEach(t => {
             const row = [
                 t.products.name,
                 t.users.name,
+                t.customer_name || '',
+                t.quantity,
                 Number(t.amount).toFixed(2),
+                t.profit !== null ? Number(t.profit).toFixed(2) : '',
                 new Date(t.sale_date).toLocaleDateString()
             ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
             csvRows.push(row);
@@ -75,18 +78,26 @@ function Transactions() {
                         <tr>
                             <th>Product</th>
                             <th>Sold By</th>
+                            <th>Customer</th>
+                            <th>Qty</th>
                             <th>Amount</th>
+                            <th>Profit</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         {transactions.length === 0 ? (
-                            <tr><td colSpan="4">No transactions yet</td></tr>
+                            <tr><td colSpan="7">No transactions yet</td></tr>
                         ) : transactions.map((transaction) => (
                             <tr key={transaction.sales_id}>
                                 <td>{transaction.products.name}</td>
                                 <td>{transaction.users.name}</td>
+                                <td>{transaction.customer_name || '—'}</td>
+                                <td>{transaction.quantity}</td>
                                 <td>₱{Number(transaction.amount).toFixed(2)}</td>
+                                <td className={transaction.profit !== null && transaction.profit < 0 ? 'profit-negative' : 'profit-positive'}>
+                                    {transaction.profit !== null ? `₱${Number(transaction.profit).toFixed(2)}` : '—'}
+                                </td>
                                 <td>{new Date(transaction.sale_date).toLocaleDateString()}</td>
                             </tr>
                         ))}

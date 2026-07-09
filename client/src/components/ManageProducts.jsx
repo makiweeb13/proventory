@@ -4,12 +4,14 @@ import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 import Pagination from './Pagination';
 import ProductRow from './ProductRow';
+import AddStockModal from './AddStockModal';
 
 function ManageProducts({ categories }) {
     const { products, statusMessage, statusType, setStatusMessage, setProducts,
             search, setTotalPages, page, order, pageSize, user: currentUser, deleteProduct } = useStore();
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
+    const [stockProduct, setStockProduct] = useState(null);
     const [form, setForm] = useState({
         name: '', stock: 1, buying_price: 0, selling_price: 0, category_id: ''
     });
@@ -94,6 +96,9 @@ function ManageProducts({ categories }) {
 
     return (
         <div className="transactions-container">
+            {stockProduct && (
+                <AddStockModal product={stockProduct} onClose={() => setStockProduct(null)} />
+            )}
             <StatusMessage message={statusMessage} type={statusType} />
             <h2>Manage Products</h2>
             <div className="table-wrapper">
@@ -124,6 +129,7 @@ function ManageProducts({ categories }) {
                                 cancelEdit={cancelEdit}
                                 handleEdit={handleEdit}
                                 handleDelete={handleDelete}
+                                onAddStock={setStockProduct}
                             />
                         ))}
                     </tbody>

@@ -137,6 +137,50 @@ const deleteUserController = async (req, res, next) => {
     }
 }
 
+const updateProfileController = async (req, res, next) => {
+    const { name, email } = req.body;
+    const id = req.user.id;
+
+    try {
+        if (!name && !email) {
+            throw new ThrowError(400, 'Name or email is required');
+        }
+        if (email) {
+            const existingUser = await userService.getUserByEmail(email);
+            if (existingUser && existingUser.user_id !== parseInt(id)) {
+                throw new ThrowError(400, 'Email already in use');
+            }
+        }
+        await userService.updateUser(id, name, email, undefined);
+        const updatedUser = await userService.getUserById(id);
+        const { password: _, ...safeUser } = updatedUser;
+        res.status(200).json({ user: safeUser, message: 'Profile updated successfully' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const changePasswordController = async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.user.id;
+
+    try {
+        if (!oldPassword || !newPassword) {
+            throw new ThrowError(400, 'Old password and new password are required');
+        }
+        const user = await userService.getUserById(id);
+        const passwordMatched = await bcrypt.compare(oldPassword, user.password);
+        if (!passwordMatched) {
+            throw new ThrowError(400, 'Current password is incorrect');
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await userService.updateUserPassword(id, hashedPassword);
+        res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const forgotPasswordController = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -166,5 +210,7 @@ module.exports = {
     logoutController,
     updateUserController,
     deleteUserController,
+    updateProfileController,
+    changePasswordController,
     forgotPasswordController
 }

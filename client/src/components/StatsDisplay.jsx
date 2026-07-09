@@ -27,7 +27,7 @@ function StatsDisplay() {
 
     const DASHBOARD_LABELS = [
         'Total Products', 'Total Stock', 'Total Sales',
-        'Low Stock Items', 'Total Inventory Value'
+        'Total Profit', 'Low Stock Items', 'Total Inventory Value'
     ];
 
     if (loading) {

@@ -81,6 +81,14 @@ const getTopProducts = async (limit = 10) => {
     `;
 };
 
+const addStock = async (id, quantity) => {
+    const product = await prisma.products.update({
+        where: { product_id: parseInt(id) },
+        data: { stock: { increment: parseInt(quantity) } }
+    });
+    return product;
+};
+
 const getTotalProductsCount = async ( search ) => {
     const count = await prisma.products.count({
         where: {
@@ -96,6 +104,7 @@ module.exports = {
     addProduct,
     updateProduct,
     deleteProduct,
+    addStock,
     getTopProducts,
     getProductByName,
     getTotalProductsCount

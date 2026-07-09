@@ -50,6 +50,18 @@ const getLowStockCount = async (threshold = 5) => {
     });
 }
 
+const getTotalProfit = async () => {
+    const sales = await prisma.sales.findMany({
+        include: { products: true }
+    });
+    return sales.reduce((total, s) => {
+        if (!s.products || !s.products.buying_price) return total;
+        const cost = Number(s.products.buying_price) * s.quantity;
+        const revenue = Number(s.amount);
+        return total + (revenue - cost);
+    }, 0);
+};
+
 const getTotalInventoryValue = async () => {
     const products = await prisma.products.findMany({
         select: { stock: true, buying_price: true }
@@ -64,5 +76,6 @@ module.exports = {
     getTotalStock,
     getTotalSalesByUser,
     getLowStockCount,
+    getTotalProfit,
     getTotalInventoryValue
 };

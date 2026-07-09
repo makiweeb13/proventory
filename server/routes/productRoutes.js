@@ -7,6 +7,7 @@ const checkAdmin = require('../middleware/checkAdmin');
 router.post('/', authenticateToken, checkAdmin, productController.addProductController);
 router.get('/', authenticateToken, productController.getAllProductsController);
 router.put('/:id', authenticateToken, checkAdmin, productController.updateProductController);
+router.patch('/:id/stock', authenticateToken, checkAdmin, productController.addStockController);
 router.delete('/:id', authenticateToken, checkAdmin, productController.deleteProductController);
 router.get('/top', authenticateToken, productController.getTopProductsController);
 
