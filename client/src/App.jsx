@@ -5,6 +5,7 @@ import PermittedRoutes from './util/PermittedRoutes';
 import Login from './components/Login';
 import PageNotFound from './components/PageNotFound';
 import Products from './components/Products';
+import AuditLog from './components/AuditLog';
 import PageLayout from './components/PageLayout';
 import Categories from './components/Categories';
 import Users from './components/Users';
@@ -25,6 +26,7 @@ function App() {
               <Route path="/users" element={<Users />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/audit" element={<AuditLog />} />
             </Route>
             <Route path="/sales" element={<Sales />} />
             <Route path="/profile/:id" element={<Profile />} />

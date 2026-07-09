@@ -1,11 +1,8 @@
-const { PrismaClient, Decimal } = require('../generated/prisma');
-
-const globalForPrisma = globalThis;
-const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+const { Decimal } = require('../generated/prisma');
+const prisma = require('../utils/prisma');
 
 
-const addSale = async (product_id, user_id, quantity, selling_price) => {
+const addSale = async (product_id, user_id, quantity, selling_price, customer_name) => {
     const amount = new Decimal(selling_price).mul(quantity);
 
     const sale = await prisma.sales.create({
@@ -13,6 +10,8 @@ const addSale = async (product_id, user_id, quantity, selling_price) => {
             product_id: parseInt(product_id),
             user_id: parseInt(user_id),
             amount: amount,
+            quantity: parseInt(quantity),
+            customer_name: customer_name || null,
             sale_date: new Date()
         }
     });
@@ -81,7 +80,8 @@ const getAllTransactions = async (search, skip, limit, order = 'desc') => {
         where: {
             OR: [
                { products: { name: { contains: search } } },
-               { users: { name: { contains: search } } }
+               { users: { name: { contains: search } } },
+               { customer_name: { contains: search } }
             ]
         },
         include: {
@@ -91,7 +91,12 @@ const getAllTransactions = async (search, skip, limit, order = 'desc') => {
         skip: skip,
         take: limit
     });
-    return transactions;
+    return transactions.map(t => ({
+        ...t,
+        profit: t.products && t.products.buying_price
+            ? Number(t.amount) - (Number(t.products.buying_price) * t.quantity)
+            : null
+    }));
 }
 
 const getTotalSaleCount = async (search) => {
@@ -99,7 +104,8 @@ const getTotalSaleCount = async (search) => {
         where: {
             OR: [
                 { products: { name: { contains: search } } },
-                { users: { name: { contains: search } } }
+                { users: { name: { contains: search } } },
+                { customer_name: { contains: search } }
             ]
         }
     });

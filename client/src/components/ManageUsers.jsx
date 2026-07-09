@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react';
+import API_URL from '../util/api';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 import Pagination from './Pagination';
-
-const STATUS_COLORS = {
-    active: '#16a34a',
-    inactive: '#6b7280',
-    suspended: '#ea580c',
-    deleted: '#dc2626'
-};
+import UserRow from './UserRow';
 
 function ManageUsers({ statusFilter }) {
     const { users, statusMessage, statusType, setStatusMessage, setTotalPages,
@@ -18,7 +13,6 @@ function ManageUsers({ statusFilter }) {
     const [form, setForm] = useState({ name: '', email: '' });
     const [editStatus, setEditStatus] = useState('active');
     const [editRole, setEditRole] = useState('user');
-    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -126,67 +120,22 @@ function ManageUsers({ statusFilter }) {
                         {users.length === 0 ? (
                             <tr><td colSpan="5">No users found</td></tr>
                         ) : filteredUsers.map(user => (
-                            <tr key={user.user_id}>
-                                {editingId === user.user_id ? (
-                                    <>
-                                        <td>
-                                            <input type="text" name="name" value={form.name} onChange={handleChange} />
-                                        </td>
-                                        <td>
-                                            <input type="email" name="email" value={form.email} onChange={handleChange} />
-                                        </td>
-                                        <td>
-                                            {currentUser?.role === 'admin' && user.user_id !== currentUser?.id ? (
-                                                <select value={editRole} onChange={(e) => setEditRole(e.target.value)} className="status-select">
-                                                    <option value="user">Staff</option>
-                                                    <option value="admin">Admin</option>
-                                                </select>
-                                            ) : (
-                                                <span className="capitalize">{editRole === 'user' ? 'Staff' : editRole}</span>
-                                            )}
-                                        </td>
-                                        <td>
-                                            {currentUser?.role === 'admin' ? (
-                                                <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="status-select">
-                                                    <option value="active">Active</option>
-                                                    <option value="inactive">Inactive</option>
-                                                    <option value="suspended">Suspended</option>
-                                                    <option value="deleted">Deleted</option>
-                                                </select>
-                                            ) : (
-                                                <span className="status-badge" style={{ backgroundColor: STATUS_COLORS[editStatus] || '#6b7280' }}>
-                                                    {editStatus}
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <button className="edit-btn" onClick={handleEdit}>Save</button>
-                                                <button className="delete-btn" onClick={cancelEdit}>Cancel</button>
-                                            </div>
-                                        </td>
-                                    </>
-                                ) : (
-                                    <>
-                                        <td>{user.name}</td>
-                                        <td>{user.email}</td>
-                                        <td className="capitalize">{user.role === 'user' ? 'Staff' : user.role}</td>
-                                        <td>
-                                            <span className="status-badge" style={{ backgroundColor: STATUS_COLORS[user.account_status] || '#6b7280' }}>
-                                                {user.account_status}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <button className="edit-btn" onClick={() => startEdit(user)}>Edit</button>
-                                                {user.role !== 'admin' && user.account_status !== 'deleted' && (
-                                                    <button className="delete-btn" onClick={() => handleDeactivate(user)}>Deactivate</button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </>
-                                )}
-                            </tr>
+                            <UserRow
+                                key={user.user_id}
+                                user={user}
+                                isEditing={editingId === user.user_id}
+                                form={form}
+                                editStatus={editStatus}
+                                editRole={editRole}
+                                currentUser={currentUser}
+                                handleChange={handleChange}
+                                startEdit={startEdit}
+                                cancelEdit={cancelEdit}
+                                handleEdit={handleEdit}
+                                handleDeactivate={handleDeactivate}
+                                setEditRole={setEditRole}
+                                setEditStatus={setEditStatus}
+                            />
                         ))}
                     </tbody>
                 </table>

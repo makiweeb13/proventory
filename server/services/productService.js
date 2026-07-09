@@ -1,8 +1,4 @@
-const { PrismaClient } = require('../generated/prisma');
-
-const globalForPrisma = globalThis;
-const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+const prisma = require('../utils/prisma');
 
 const getAllProducts = async (search, order='asc', skip, limit) => {
     const products = await prisma.products.findMany({
@@ -85,6 +81,14 @@ const getTopProducts = async (limit = 10) => {
     `;
 };
 
+const addStock = async (id, quantity) => {
+    const product = await prisma.products.update({
+        where: { product_id: parseInt(id) },
+        data: { stock: { increment: parseInt(quantity) } }
+    });
+    return product;
+};
+
 const getTotalProductsCount = async ( search ) => {
     const count = await prisma.products.count({
         where: {
@@ -100,6 +104,7 @@ module.exports = {
     addProduct,
     updateProduct,
     deleteProduct,
+    addStock,
     getTopProducts,
     getProductByName,
     getTotalProductsCount

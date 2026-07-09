@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
+import API_URL from '../util/api';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 import Pagination from './Pagination';
+import InvoiceModal from './InvoiceModal';
 
 function AddSales() {
     const { products, statusMessage, statusType, setStatusMessage, setProducts,
             search, setTotalPages, page, order, pageSize, user, updateProduct } = useStore();
     const [loading, setLoading] = useState(true);
     const [quantities, setQuantities] = useState({});
-    const API_URL = import.meta.env.VITE_API_URL;
-
+    const [customerName, setCustomerName] = useState('');
+    const [lastSale, setLastSale] = useState(null);
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -45,7 +47,8 @@ function AddSales() {
                     product_id: product.product_id,
                     user_id: user.id,
                     quantity,
-                    selling_price: product.selling_price
+                    selling_price: product.selling_price,
+                    customer_name: customerName || undefined
                 }),
                 credentials: 'include'
             });
@@ -54,6 +57,7 @@ function AddSales() {
             setStatusMessage(data.message);
             updateProduct(data.product);
             setQuantities(prev => ({ ...prev, [product.product_id]: 1 }));
+            setLastSale({ sale: data.sale, product: data.product, customerName });
         } catch (error) {
             setStatusMessage(`Error adding sale: ${error.message}`, 'error');
         }
@@ -63,8 +67,28 @@ function AddSales() {
 
     return (
         <div className="transactions-container">
+            {lastSale && (
+                <InvoiceModal
+                    sale={lastSale.sale}
+                    product={lastSale.product}
+                    user={user}
+                    customerName={lastSale.customerName}
+                    onClose={() => setLastSale(null)}
+                />
+            )}
             <StatusMessage message={statusMessage} type={statusType} />
-            <h2>Add Sales</h2>
+            <h2>New Sale</h2>
+            <div className="customer-name-row">
+                <label htmlFor="customer-name">Customer Name:</label>
+                <input
+                    id="customer-name"
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Optional"
+                    className="customer-name-input"
+                />
+            </div>
             <div className="table-wrapper">
                 <table className="transactions-table">
                     <thead>
@@ -82,7 +106,15 @@ function AddSales() {
                         ) : products.map(product => (
                             <tr key={product.product_id}>
                                 <td>{product.name}</td>
-                                <td>{product.stock}</td>
+                                <td>
+                                    {product.stock}
+                                    {product.stock <= 10 && product.stock > 0 && (
+                                        <span className="low-stock-badge">Low</span>
+                                    )}
+                                    {product.stock === 0 && (
+                                        <span className="out-of-stock-badge">Out</span>
+                                    )}
+                                </td>
                                 <td>
                                     <input
                                         type="number"

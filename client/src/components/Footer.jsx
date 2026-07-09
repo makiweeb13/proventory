@@ -1,10 +1,9 @@
 function Footer() {
     return (
         <footer>
-            <div>
-                <p>Dev: Maria Mae Kiskis</p>
-                <p>22105083@usc.edu.ph</p>
-                <p>&copy; 2024. All rights reserved.</p>
+            <div className="footer-content">
+                <p className="footer-brand">Proventory</p>
+                <p className="footer-copy">&copy; {new Date().getFullYear()} Maria Mae Kiskis &middot; 22105083@usc.edu.ph</p>
             </div>
         </footer>
     )

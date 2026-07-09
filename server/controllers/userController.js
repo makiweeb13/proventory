@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const { ThrowError } = require('../middleware/errorHandler');
 const userService = require('../services/userService');
+const auditService = require('../services/auditService');
 
 dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET;
@@ -10,18 +11,18 @@ const SECRET_KEY = process.env.JWT_SECRET;
 const registerController = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
-    if (!name || !email || !password || !role) {
-        throw new ThrowError(400, 'All fields are required');
-    }
-
     try {
+        if (!name || !email || !password || !role) {
+            throw new ThrowError(400, 'All fields are required');
+        }
         const existingUser = await userService.getUserByEmail(email);
         if (existingUser) {
             throw new ThrowError(400, 'User already exists');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userService.addUser(name, email, hashedPassword, role);
-        res.status(201).json({ user, message: 'User registered successfully' });
+        const { password: _, ...safeUser } = user;
+        res.status(201).json({ user: safeUser, message: 'User registered successfully' });
     } catch (error) {
         next(error);
     }
@@ -71,7 +72,8 @@ const getUserController = async (req, res, next) => {
         if (!user) {
             throw new ThrowError(404, 'User not found');
         }
-        res.json(user);
+        const { password: _, ...safeUser } = user;
+        res.json(safeUser);
     } catch (error) {
         next(error);
     }
@@ -100,8 +102,7 @@ const getAllUsersController = async (req, res, next) => {
 }
 
 const logoutController = (req, res) => {
-  // Clear the JWT cookie
-  res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'strict' });
+  res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
  
   res.status(200).json({ message: 'Logged out successfully' });
 }
@@ -118,7 +119,9 @@ const updateUserController = async (req, res, next) => {
             await userService.updateUser(id, name, email, role);
         }
         if (account_status) {
+            const user = await userService.getUserById(id);
             await userService.updateUserStatus(id, account_status);
+            await auditService.logAction(req.user.id, 'UPDATE_USER_STATUS', 'users', id, { from: user?.account_status, to: account_status });
         }
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -130,21 +133,66 @@ const deleteUserController = async (req, res, next) => {
     const { id } = req.params;
 
     try {
+        const user = await userService.getUserById(id);
         await userService.deleteUser(id);
+        await auditService.logAction(req.user.id, 'DELETE_USER', 'users', id, { email: user?.email });
         res.status(200).json({ message: 'User deactivated successfully' });
     } catch (error) {
         next(error);
     }
 }
 
+const updateProfileController = async (req, res, next) => {
+    const { name, email } = req.body;
+    const id = req.user.id;
+
+    try {
+        if (!name && !email) {
+            throw new ThrowError(400, 'Name or email is required');
+        }
+        if (email) {
+            const existingUser = await userService.getUserByEmail(email);
+            if (existingUser && existingUser.user_id !== parseInt(id)) {
+                throw new ThrowError(400, 'Email already in use');
+            }
+        }
+        await userService.updateUser(id, name, email, undefined);
+        const updatedUser = await userService.getUserById(id);
+        const { password: _, ...safeUser } = updatedUser;
+        res.status(200).json({ user: safeUser, message: 'Profile updated successfully' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const changePasswordController = async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.user.id;
+
+    try {
+        if (!oldPassword || !newPassword) {
+            throw new ThrowError(400, 'Old password and new password are required');
+        }
+        const user = await userService.getUserById(id);
+        const passwordMatched = await bcrypt.compare(oldPassword, user.password);
+        if (!passwordMatched) {
+            throw new ThrowError(400, 'Current password is incorrect');
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await userService.updateUserPassword(id, hashedPassword);
+        res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const forgotPasswordController = async (req, res, next) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-        throw new ThrowError(400, 'Email and password are required');
-    }
-
     try {
+        if (!email || !password) {
+            throw new ThrowError(400, 'Email and password are required');
+        }
         const user = await userService.getUserByEmail(email);
         if (!user) {
             throw new ThrowError(404, 'User not found');
@@ -167,5 +215,7 @@ module.exports = {
     logoutController,
     updateUserController,
     deleteUserController,
+    updateProfileController,
+    changePasswordController,
     forgotPasswordController
 }

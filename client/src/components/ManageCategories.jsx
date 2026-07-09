@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import API_URL from '../util/api';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 import Pagination from './Pagination';
+import CategoryRow from './CategoryRow';
 
 function ManageCategories() {
     const { categories, statusMessage, statusType, setStatusMessage, setTotalPages,
@@ -9,8 +11,6 @@ function ManageCategories() {
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
     const [form, setForm] = useState({ name: '' });
-    const API_URL = import.meta.env.VITE_API_URL;
-
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -96,31 +96,17 @@ function ManageCategories() {
                         {categories.length === 0 ? (
                             <tr><td colSpan="2">No categories found</td></tr>
                         ) : categories.map(category => (
-                            <tr key={category.category_id}>
-                                {editingId === category.category_id ? (
-                                    <>
-                                        <td>
-                                            <input type="text" name="name" value={form.name} onChange={handleChange} />
-                                        </td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <button className="edit-btn" onClick={handleEdit}>Save</button>
-                                                <button className="delete-btn" onClick={cancelEdit}>Cancel</button>
-                                            </div>
-                                        </td>
-                                    </>
-                                ) : (
-                                    <>
-                                        <td>{category.name}</td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <button className="edit-btn" onClick={() => startEdit(category)}>Edit</button>
-                                                <button className="delete-btn" onClick={() => handleDelete(category)}>Delete</button>
-                                            </div>
-                                        </td>
-                                    </>
-                                )}
-                            </tr>
+                            <CategoryRow
+                                key={category.category_id}
+                                category={category}
+                                isEditing={editingId === category.category_id}
+                                form={form}
+                                handleChange={handleChange}
+                                startEdit={startEdit}
+                                cancelEdit={cancelEdit}
+                                handleEdit={handleEdit}
+                                handleDelete={handleDelete}
+                            />
                         ))}
                     </tbody>
                 </table>

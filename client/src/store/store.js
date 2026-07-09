@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-const useStore = create((set, get) => ({
+const useStore = create((set) => ({
     user: null,
     title: 'Dashboard',
     users: [],
@@ -35,10 +35,6 @@ const useStore = create((set, get) => ({
     clearStatusMessage: () => set({ statusMessage: '', statusType: 'success' }),
     setSearch: (search) => set({ search }),
     setCategories: (categories) => set({ categories }),
-    getCategoryById: (id) => {
-        const state = get();
-        return state.categories.find(category => category.category_id === id);
-    },
     addCategory: (category) => set((state) => ({ categories: [...state.categories, category] })),
     deleteCategory: (id) => set((state) => ({
         categories: state.categories.filter(category => category.category_id !== id)
@@ -50,7 +46,12 @@ const useStore = create((set, get) => ({
     })),
     deleteProduct: (id) => set((state) => ({
         products: state.products.filter(product => product.product_id !== id)
-    }))
+    })),
+    updateProductStock: (productId, newStock) => set((state) => ({
+        products: state.products.map(product =>
+            product.product_id === productId ? { ...product, stock: newStock } : product
+        )
+    })),
 }));
 
 export default useStore;

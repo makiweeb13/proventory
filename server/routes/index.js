@@ -4,6 +4,7 @@ const productRoutes = require('./productRoutes');
 const saleRoutes = require('./saleRoutes');
 const statRoutes = require('./statRoutes');
 const seedRoutes = require('./seedRoutes');
+const auditRoutes = require('./auditRoutes');
 
 module.exports = {
     userRoutes,
@@ -11,5 +12,6 @@ module.exports = {
     productRoutes,
     saleRoutes,
     statRoutes,
-    seedRoutes
+    seedRoutes,
+    auditRoutes
 };

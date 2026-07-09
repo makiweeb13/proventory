@@ -25,6 +25,7 @@ app.use('/api/category', routes.categoryRoutes);
 app.use('/api/product', routes.productRoutes);
 app.use('/api/sale', routes.saleRoutes);
 app.use('/api/stat', routes.statRoutes);
+app.use('/api/audit', routes.auditRoutes);
 app.use('/api/seed', routes.seedRoutes);
 
 app.use(errorHandler);

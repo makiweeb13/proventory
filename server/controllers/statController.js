@@ -1,5 +1,6 @@
 const { ThrowError } = require('../middleware/errorHandler');
 const statService = require('../services/statService');
+const saleController = require('./saleController');
 
 const getStatsController = async (req, res, next) => {
     try {
@@ -9,6 +10,7 @@ const getStatsController = async (req, res, next) => {
         const totalStock = await statService.getTotalStock();
         const totalSalesByUser = req.user ? await statService.getTotalSalesByUser(req.user.id) : 0;
         const lowStockCount = await statService.getLowStockCount();
+        const totalProfit = await statService.getTotalProfit();
         const inventoryValue = await statService.getTotalInventoryValue();
 
         res.status(200).json({
@@ -19,11 +21,13 @@ const getStatsController = async (req, res, next) => {
                 { label: 'Total Sales', value: totalSales },
                 { label: 'Total Sales by User', value: totalSalesByUser },
                 { label: 'Low Stock Items', value: lowStockCount },
+                { label: 'Total Profit', value: saleController.convertBigInt(totalProfit) },
                 { label: 'Total Inventory Value', value: inventoryValue }
             ]
         });
     } catch (error) {
-        next(new ThrowError(500, 'Failed to fetch statistics'));
+        console.error('Failed to fetch statistics:', error);
+        next(error);
     }
 };
 

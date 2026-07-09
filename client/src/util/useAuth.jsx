@@ -1,3 +1,4 @@
+import API_URL from "./api";
 import { useState, useEffect } from 'react';
 import useStore from '../store/store';
 
@@ -8,7 +9,6 @@ const useAuth = () => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const API_URL = import.meta.env.VITE_API_URL;
             try {
                 const response = await fetch(`${API_URL}/user/me`, { credentials: 'include' });
                 if (!response.ok) {

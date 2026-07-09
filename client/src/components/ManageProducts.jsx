@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
+import API_URL from '../util/api';
 import useStore from '../store/store';
 import StatusMessage from './StatusMessage';
 import Pagination from './Pagination';
+import ProductRow from './ProductRow';
+import AddStockModal from './AddStockModal';
 
 function ManageProducts({ categories }) {
     const { products, statusMessage, statusType, setStatusMessage, setProducts,
             search, setTotalPages, page, order, pageSize, user: currentUser, deleteProduct } = useStore();
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
+    const [stockProduct, setStockProduct] = useState(null);
     const [form, setForm] = useState({
         name: '', stock: 1, buying_price: 0, selling_price: 0, category_id: ''
     });
-    const API_URL = import.meta.env.VITE_API_URL;
     const isAdmin = currentUser?.role === 'admin';
 
     useEffect(() => {
@@ -93,6 +96,9 @@ function ManageProducts({ categories }) {
 
     return (
         <div className="transactions-container">
+            {stockProduct && (
+                <AddStockModal product={stockProduct} onClose={() => setStockProduct(null)} />
+            )}
             <StatusMessage message={statusMessage} type={statusType} />
             <h2>Manage Products</h2>
             <div className="table-wrapper">
@@ -111,54 +117,20 @@ function ManageProducts({ categories }) {
                         {products.length === 0 ? (
                             <tr><td colSpan={colSpan}>No products found</td></tr>
                         ) : products.map(product => (
-                            <tr key={product.product_id}>
-                                {editingId === product.product_id ? (
-                                    <>
-                                        <td>
-                                            <input type="text" name="name" value={form.name} onChange={handleChange} />
-                                        </td>
-                                        <td>
-                                            <input type="number" name="stock" value={form.stock} onChange={handleChange} min={0} />
-                                        </td>
-                                        {isAdmin && (
-                                            <td>
-                                                <input type="number" name="buying_price" value={form.buying_price} onChange={handleChange} />
-                                            </td>
-                                        )}
-                                        <td>
-                                            <input type="number" name="selling_price" value={form.selling_price} onChange={handleChange} />
-                                        </td>
-                                        <td>
-                                            <select name="category_id" value={form.category_id} onChange={handleChange}>
-                                                <option value="">Select Category</option>
-                                                {categories.map(cat => (
-                                                    <option key={cat.category_id} value={cat.category_id}>{cat.name}</option>
-                                                ))}
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <button className="edit-btn" onClick={handleEdit}>Save</button>
-                                                <button className="delete-btn" onClick={cancelEdit}>Cancel</button>
-                                            </div>
-                                        </td>
-                                    </>
-                                ) : (
-                                    <>
-                                        <td>{product.name}</td>
-                                        <td>{product.stock}</td>
-                                        {isAdmin && <td>&#8369;{Number(product.buying_price).toFixed(2)}</td>}
-                                        <td>&#8369;{Number(product.selling_price).toFixed(2)}</td>
-                                        <td>{categories.find(c => c.category_id === product.category_id)?.name || 'N/A'}</td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <button className="edit-btn" onClick={() => startEdit(product)}>Edit</button>
-                                                <button className="delete-btn" onClick={() => handleDelete(product)}>Delete</button>
-                                            </div>
-                                        </td>
-                                    </>
-                                )}
-                            </tr>
+                            <ProductRow
+                                key={product.product_id}
+                                product={product}
+                                isEditing={editingId === product.product_id}
+                                form={form}
+                                categories={categories}
+                                isAdmin={isAdmin}
+                                handleChange={handleChange}
+                                startEdit={startEdit}
+                                cancelEdit={cancelEdit}
+                                handleEdit={handleEdit}
+                                handleDelete={handleDelete}
+                                onAddStock={setStockProduct}
+                            />
                         ))}
                     </tbody>
                 </table>

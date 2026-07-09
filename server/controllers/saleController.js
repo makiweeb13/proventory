@@ -4,13 +4,14 @@ const productService = require('../services/productService');
 const { Decimal } = require('../generated/prisma'); // Prisma v4+
 
 const addSaleController = async (req, res, next) => {
-    const { product_id, user_id, quantity, selling_price } = req.body;
+    const { product_id, user_id, quantity, selling_price, customer_name } = req.body;
     try {
-        const sale = await saleService.addSale(product_id, user_id, quantity, selling_price);
+        const sale = await saleService.addSale(product_id, user_id, quantity, selling_price, customer_name);
         const product = await productService.getProductById(product_id);
         res.status(200).json({ sale, product, message: 'Sale added successfully' });
     } catch (error) {
-        next(new ThrowError(500, 'Failed to add sale'));
+        console.error('Failed to add sale:', error);
+        next(error);
     }
 }
 

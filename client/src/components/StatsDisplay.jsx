@@ -1,3 +1,4 @@
+import API_URL from "../util/api";
 import { useState, useEffect } from "react";
 import Stat from "./Stat";
 
@@ -9,7 +10,6 @@ function StatsDisplay() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL;
                 const response = await fetch(`${API_URL}/stat`, {
                     credentials: 'include',
                 });
@@ -27,7 +27,7 @@ function StatsDisplay() {
 
     const DASHBOARD_LABELS = [
         'Total Products', 'Total Stock', 'Total Sales',
-        'Low Stock Items', 'Total Inventory Value'
+        'Total Profit', 'Low Stock Items', 'Total Inventory Value'
     ];
 
     if (loading) {
